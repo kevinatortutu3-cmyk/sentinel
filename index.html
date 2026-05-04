@@ -1335,6 +1335,119 @@ body.is-developer .admin-dev-header{display:flex;}
 .notes-list-del:hover{color:#ff4444;}
 
 /* ═══════════════════════════════════
+   💬 COMMENTAIRES
+═══════════════════════════════════ */
+.cmt-composer{
+  padding:12px 14px 0;
+}
+.cmt-input{
+  width:100%;min-height:72px;max-height:130px;
+  background:#050000;border:1px solid var(--border2);
+  border-radius:10px;
+  color:var(--w);font-family:var(--font);font-size:11px;
+  padding:10px 12px;outline:none;resize:none;
+  transition:border-color 0.2s;line-height:1.65;
+  box-sizing:border-box;
+}
+.cmt-input:focus{border-color:rgba(255,43,43,0.6);box-shadow:0 0 14px rgba(255,43,43,0.1);}
+.cmt-input::placeholder{color:var(--faint);}
+.cmt-composer-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:7px;margin-bottom:10px;
+}
+.cmt-char-count{font-size:9px;color:var(--faint);letter-spacing:0.1em;}
+.cmt-char-count.warn{color:#ffaa33;}
+.cmt-char-count.full{color:#ff4444;}
+.cmt-send-btn{
+  font-family:var(--font);font-size:10px;letter-spacing:0.18em;
+  padding:7px 14px;background:linear-gradient(135deg,rgba(255,43,43,0.9),rgba(255,106,61,0.8));
+  color:#fff;border:none;cursor:pointer;border-radius:7px;
+  transition:all 0.2s;
+  box-shadow:0 0 14px rgba(255,43,43,0.2);
+}
+.cmt-send-btn:hover{box-shadow:0 0 24px rgba(255,43,43,0.45);transform:translateY(-1px);}
+.cmt-send-btn:disabled{background:#2a0c0c;color:#704343;cursor:default;box-shadow:none;transform:none;}
+
+/* Filter bar */
+.cmt-filter-bar{
+  display:flex;gap:5px;padding:0 14px 8px;
+  border-bottom:1px solid var(--border);
+}
+.cmt-filter-btn,.cmt-sort-btn{
+  font-family:var(--font);font-size:9px;letter-spacing:0.15em;
+  padding:5px 10px;background:transparent;
+  border:1px solid var(--border);color:var(--faint);
+  cursor:pointer;border-radius:6px;transition:all 0.18s;
+}
+.cmt-filter-btn:hover,.cmt-sort-btn:hover{color:var(--w);border-color:var(--accent);}
+.cmt-filter-btn.active{color:var(--accent);border-color:var(--accent);background:rgba(255,43,43,0.08);}
+.cmt-sort-btn{margin-left:auto;}
+
+/* Comment list */
+.cmt-list{
+  display:flex;flex-direction:column;
+  overflow-y:auto;flex:1;
+  padding:6px 0;
+}
+.cmt-list::-webkit-scrollbar{width:3px;}
+.cmt-list::-webkit-scrollbar-thumb{background:var(--border2);}
+.cmt-loading{font-size:10px;color:var(--faint);text-align:center;padding:20px;letter-spacing:0.12em;}
+.cmt-empty{font-size:10px;color:var(--faint);text-align:center;padding:20px;letter-spacing:0.1em;}
+
+/* Individual comment */
+.cmt-item{
+  padding:10px 14px;
+  border-bottom:1px solid var(--border);
+  transition:background 0.15s;
+  position:relative;
+}
+.cmt-item:hover{background:rgba(255,43,43,0.03);}
+.cmt-item.is-mine{background:rgba(255,43,43,0.04);}
+.cmt-item.is-mine:hover{background:rgba(255,43,43,0.07);}
+.cmt-item-header{
+  display:flex;align-items:center;gap:7px;
+  margin-bottom:5px;flex-wrap:wrap;
+}
+.cmt-avatar{
+  width:22px;height:22px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--title);font-size:9px;font-weight:700;
+  flex-shrink:0;border:1px solid rgba(255,255,255,0.1);
+}
+.cmt-username{
+  font-family:var(--font);font-size:10px;letter-spacing:0.12em;
+  color:var(--w);font-weight:bold;
+}
+.cmt-username.is-dev{color:#c4b5fd;}
+.cmt-username.is-admin{color:#ffaa33;}
+.cmt-role-tag{
+  font-size:7px;padding:2px 5px;border-radius:3px;
+  border:1px solid;letter-spacing:0.1em;
+}
+.cmt-role-dev{color:#a78bfa;border-color:#a78bfa;background:rgba(167,139,250,0.1);}
+.cmt-role-admin{color:#ffaa33;border-color:#ffaa33;background:rgba(255,170,51,0.08);}
+.cmt-role-member{color:#60a5fa;border-color:#3b82f6;background:rgba(59,130,246,0.08);}
+.cmt-time{font-size:8px;color:var(--faint);letter-spacing:0.08em;margin-left:auto;}
+.cmt-body{
+  font-family:var(--body);font-size:13px;color:#ddd;
+  line-height:1.55;word-break:break-word;
+  white-space:pre-wrap;
+}
+.cmt-actions{
+  display:flex;gap:8px;margin-top:6px;
+}
+.cmt-like-btn,.cmt-del-btn{
+  background:none;border:none;cursor:pointer;
+  font-size:10px;color:var(--faint);font-family:var(--font);
+  letter-spacing:0.1em;padding:0;transition:color 0.15s;
+  display:flex;align-items:center;gap:4px;
+}
+.cmt-like-btn:hover{color:var(--accent2);}
+.cmt-like-btn.liked{color:var(--accent2);}
+.cmt-del-btn:hover{color:#ff4444;}
+.cmt-like-count{font-size:9px;}
+
+/* ═══════════════════════════════════
    📊 STATS DE VISITE
 ═══════════════════════════════════ */
 .visit-item{
@@ -1932,6 +2045,10 @@ body.is-developer .admin-dev-header{display:flex;}
     <span class="sb-icon">🏆</span>
     <span class="sb-label">TOP SITES</span>
   </button>
+  <button class="sb-item" onclick="sbShow('comments')" id="sbn-comments">
+    <span class="sb-icon">💬</span>
+    <span class="sb-label">COMMENTAIRES</span>
+  </button>
   <button class="sb-item" onclick="sbShow('admin')" id="sbn-admin" style="display:none;">
     <span class="sb-icon">🔴</span>
     <span class="sb-label">ADMIN</span>
@@ -2083,6 +2200,32 @@ body.is-developer .admin-dev-header{display:flex;}
     <div class="sb-panel-title">// 🏆 TOP SITES CLIQUÉS</div>
     <div id="visits-list"></div>
     <button class="visit-reset-btn" onclick="resetVisitStats()">↺ RÉINITIALISER</button>
+  </div>
+
+  <!-- COMMENTS PANEL -->
+  <div class="sb-panel" id="sbp-comments">
+    <div class="sb-panel-title">// 💬 COMMENTAIRES</div>
+
+    <!-- New comment composer -->
+    <div class="cmt-composer">
+      <textarea class="cmt-input" id="cmt-input" placeholder="Écris un commentaire…" maxlength="400" oninput="cmt_countChars()"></textarea>
+      <div class="cmt-composer-footer">
+        <span class="cmt-char-count" id="cmt-char-count">0 / 400</span>
+        <button class="cmt-send-btn" onclick="postComment()">ENVOYER ↗</button>
+      </div>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="cmt-filter-bar">
+      <button class="cmt-filter-btn active" id="cmt-f-all"   onclick="cmt_setFilter('all',this)">TOUS</button>
+      <button class="cmt-filter-btn"        id="cmt-f-mine"  onclick="cmt_setFilter('mine',this)">LES MIENS</button>
+      <button class="cmt-sort-btn"          id="cmt-sort-btn" onclick="cmt_toggleSort()">↓ RÉCENTS</button>
+    </div>
+
+    <!-- Comment list -->
+    <div class="cmt-list" id="cmt-list">
+      <div class="cmt-loading" id="cmt-loading">Chargement…</div>
+    </div>
   </div>
 
   <!-- ADMIN PANEL -->
@@ -2819,6 +2962,7 @@ async function loginAs(user){
 function doLogout(){
   currentUser=null;
   clearSession();
+  if(cmtPolling){ clearInterval(cmtPolling); cmtPolling=null; }
   document.getElementById('right-sidebar').classList.add('hidden-sidebar');
   document.getElementById('right-sidebar').classList.remove('open');
   document.body.classList.remove('is-admin','is-developer');
@@ -3158,6 +3302,7 @@ function sbShow(panel){
   if(panel==='visits') renderVisits();
   if(panel==='notes') renderStickyList();
   if(panel==='admin') loadAdminUsers();
+  if(panel==='comments') loadComments();
 }
 
 let currentTheme='';
@@ -3997,6 +4142,214 @@ function autoSaveNotes(){}
 function saveNotes(){}
 function updateNotesMeta(){}
 function clearNotes(){}
+
+/* ══════════════════════════════════════
+   💬 COMMENTS SYSTEM
+══════════════════════════════════════ */
+let cmtAllComments = [];
+let cmtFilter = 'all';   // 'all' | 'mine'
+let cmtSortDesc = true;  // true = récents en premier
+let cmtLikedIds = [];    // IDs likés par l'utilisateur courant (localStorage)
+let cmtPolling = null;
+
+function cmtLikesKey(){ return currentUser ? 'sentinel_likes_'+currentUser.id : null; }
+function cmtLoadLikes(){
+  const k = cmtLikesKey();
+  if(!k) return;
+  try{ cmtLikedIds = JSON.parse(localStorage.getItem(k)||'[]'); } catch(e){ cmtLikedIds=[]; }
+}
+function cmtSaveLikes(){
+  const k = cmtLikesKey();
+  if(k) localStorage.setItem(k, JSON.stringify(cmtLikedIds));
+}
+
+async function cmtFetch(){
+  const data = await sbFetch('GET','comments?select=*&order=created_at.desc');
+  return data || [];
+}
+
+async function loadComments(){
+  if(!currentUser) return;
+  cmtLoadLikes();
+  document.getElementById('cmt-loading').style.display='block';
+  const data = await cmtFetch();
+  cmtAllComments = data;
+  document.getElementById('cmt-loading').style.display='none';
+  renderComments();
+  // Start polling every 15s
+  if(cmtPolling) clearInterval(cmtPolling);
+  cmtPolling = setInterval(async()=>{
+    const fresh = await cmtFetch();
+    cmtAllComments = fresh;
+    renderComments();
+  }, 15000);
+}
+
+function renderComments(){
+  const list = document.getElementById('cmt-list');
+  if(!list) return;
+
+  let items = [...cmtAllComments];
+  if(cmtFilter==='mine') items = items.filter(c=>c.user_id===currentUser.id);
+  if(!cmtSortDesc) items = items.reverse();
+
+  list.innerHTML='';
+  if(!items.length){
+    list.innerHTML='<div class="cmt-empty">Aucun commentaire pour l\'instant.<br>Soyez le premier ! 💬</div>';
+    return;
+  }
+
+  items.forEach(c=>{
+    const isMine = c.user_id === currentUser.id;
+    const isDev  = c.username?.toUpperCase() === 'JULIAN_DBOUBAYE';
+    const isAdm  = c.is_admin;
+    const liked  = cmtLikedIds.includes(c.id);
+    const likes  = c.likes || 0;
+
+    // Avatar color from username
+    const hue = Math.abs([...( c.username||'?')].reduce((a,ch)=>a+ch.charCodeAt(0),0)) % 360;
+    const avatarBg = `hsl(${hue},55%,28%)`;
+    const avatarLetter = (c.username||'?')[0].toUpperCase();
+
+    const roleTag = isDev
+      ? '<span class="cmt-role-tag cmt-role-dev">⬡ DEV</span>'
+      : isAdm
+        ? '<span class="cmt-role-tag cmt-role-admin">ADMIN</span>'
+        : '<span class="cmt-role-tag cmt-role-member">MEMBRE</span>';
+
+    const delBtn = (isMine || currentUser.isAdmin)
+      ? `<button class="cmt-del-btn" onclick="deleteComment('${c.id}')">🗑 Supprimer</button>`
+      : '';
+
+    const timeStr = cmtFormatTime(c.created_at);
+
+    const div = document.createElement('div');
+    div.className = 'cmt-item' + (isMine?' is-mine':'');
+    div.id = 'cmt-'+c.id;
+    div.innerHTML=`
+      <div class="cmt-item-header">
+        <div class="cmt-avatar" style="background:${avatarBg};">${avatarLetter}</div>
+        <span class="cmt-username ${isDev?'is-dev':isAdm?'is-admin':''}">${escHtml(c.username||'Anonyme')}</span>
+        ${roleTag}
+        <span class="cmt-time">${timeStr}</span>
+      </div>
+      <div class="cmt-body">${escHtml(c.content)}</div>
+      <div class="cmt-actions">
+        <button class="cmt-like-btn ${liked?'liked':''}" onclick="toggleLike('${c.id}',${likes})">
+          ${liked?'❤️':'🤍'} <span class="cmt-like-count" id="cmt-lc-${c.id}">${likes}</span>
+        </button>
+        ${delBtn}
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+function escHtml(s){
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function cmtFormatTime(iso){
+  if(!iso) return '';
+  const d = new Date(iso);
+  const now = new Date();
+  const diff = Math.floor((now-d)/1000);
+  if(diff < 60)  return 'à l\'instant';
+  if(diff < 3600) return Math.floor(diff/60)+'min';
+  if(diff < 86400) return Math.floor(diff/3600)+'h';
+  const dd=String(d.getDate()).padStart(2,'0');
+  const mm=String(d.getMonth()+1).padStart(2,'0');
+  return dd+'/'+mm+'/'+d.getFullYear();
+}
+
+async function postComment(){
+  if(!currentUser) return;
+  const input = document.getElementById('cmt-input');
+  const content = (input.value||'').trim();
+  if(!content){ toast('Écris quelque chose d\'abord !'); return; }
+  if(content.length > 400){ toast('Commentaire trop long (max 400 car.)'); return; }
+
+  const btn = document.querySelector('.cmt-send-btn');
+  if(btn) btn.disabled=true;
+
+  const payload = {
+    user_id:   currentUser.id,
+    username:  currentUser.username,
+    is_admin:  currentUser.isAdmin||false,
+    content:   content,
+    likes:     0,
+    created_at: new Date().toISOString()
+  };
+
+  const res = await sbFetch('POST','comments', payload);
+  if(res){
+    input.value='';
+    cmt_countChars();
+    const fresh = await cmtFetch();
+    cmtAllComments = fresh;
+    renderComments();
+    toast('💬 Commentaire publié !');
+  } else {
+    toast('Erreur lors de la publication. Vérifie que la table "comments" existe dans Supabase.');
+  }
+  if(btn) btn.disabled=false;
+}
+
+async function deleteComment(id){
+  if(!currentUser) return;
+  const res = await sbFetch('DELETE','comments?id=eq.'+id);
+  if(res !== null){
+    cmtAllComments = cmtAllComments.filter(c=>c.id!==id);
+    const el = document.getElementById('cmt-'+id);
+    if(el){ el.style.opacity='0';el.style.transition='opacity 0.2s';setTimeout(()=>el.remove(),200); }
+    toast('🗑 Commentaire supprimé.');
+  }
+}
+
+async function toggleLike(id, currentLikes){
+  if(!currentUser) return;
+  const liked = cmtLikedIds.includes(id);
+  const newLikes = liked ? Math.max(0,currentLikes-1) : currentLikes+1;
+
+  // Optimistic UI
+  const btn = document.querySelector(`[onclick="toggleLike('${id}',${currentLikes})"]`);
+  const counter = document.getElementById('cmt-lc-'+id);
+  if(counter) counter.textContent = newLikes;
+  if(btn){ btn.innerHTML = (!liked?'❤️':'🤍')+` <span class="cmt-like-count" id="cmt-lc-${id}">${newLikes}</span>`; btn.classList.toggle('liked',!liked); }
+
+  if(liked) cmtLikedIds = cmtLikedIds.filter(i=>i!==id);
+  else cmtLikedIds.push(id);
+  cmtSaveLikes();
+
+  await sbFetch('PATCH','comments?id=eq.'+id,{likes:newLikes});
+  // Update local cache
+  const c = cmtAllComments.find(c=>c.id===id);
+  if(c) c.likes = newLikes;
+}
+
+function cmt_countChars(){
+  const input = document.getElementById('cmt-input');
+  const counter = document.getElementById('cmt-char-count');
+  if(!input||!counter) return;
+  const len = (input.value||'').length;
+  counter.textContent = len+' / 400';
+  counter.className = 'cmt-char-count'+(len>350?' warn':len>=400?' full':'');
+}
+
+function cmt_setFilter(f, btn){
+  cmtFilter = f;
+  document.querySelectorAll('.cmt-filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderComments();
+}
+
+function cmt_toggleSort(){
+  cmtSortDesc = !cmtSortDesc;
+  const btn = document.getElementById('cmt-sort-btn');
+  if(btn) btn.textContent = (cmtSortDesc?'↓ RÉCENTS':'↑ ANCIENS');
+  renderComments();
+}
 
 /* ══════════════════════════════════════
    📊 STATS DE VISITE
