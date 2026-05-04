@@ -2436,10 +2436,16 @@ async function sbFetch(method, path, body){
   if(body) opts.body = JSON.stringify(body);
   try {
     const res = await fetch(SUPABASE_URL + '/rest/v1/' + path, opts);
-    if(!res.ok){ console.error('Supabase error:', res.status, await res.text()); return null; }
     const text = await res.text();
+    if(!res.ok){
+      console.error('Supabase error:', res.status, text);
+      // Store last error for display
+      window._sbLastError = res.status + ' — ' + text;
+      return null;
+    }
+    window._sbLastError = null;
     return text ? JSON.parse(text) : true;
-  } catch(e){ console.error('Supabase fetch error:', e); return null; }
+  } catch(e){ console.error('Supabase fetch error:', e); window._sbLastError = e.message; return null; }
 }
 
 /* ══════════════════════════════════════
@@ -4291,7 +4297,8 @@ async function postComment(){
     renderComments();
     toast('💬 Commentaire publié !');
   } else {
-    toast('Erreur lors de la publication. Vérifie que la table "comments" existe dans Supabase.');
+    const detail = window._sbLastError || '?';
+    toast('❌ Erreur : ' + detail, 6000);
   }
   if(btn) btn.disabled=false;
 }
