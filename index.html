@@ -4280,7 +4280,7 @@ async function postComment(){
   if(btn) btn.disabled=true;
 
   const payload = {
-    user_id:   currentUser.id,
+    user_id:   String(currentUser.id),
     username:  currentUser.username,
     is_admin:  currentUser.isAdmin||false,
     content:   content,
