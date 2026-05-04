@@ -1002,6 +1002,30 @@ body.theme-unicorn #hugo-badge { display: block; }
   from{opacity:0;letter-spacing:0.6em;}
   to{opacity:1;letter-spacing:0.35em;}
 }
+#welcome-fs{
+  font-family:'Rajdhani',sans-serif;
+  font-size:clamp(13px,1.6vw,18px);
+  font-weight:600;
+  letter-spacing:0.12em;
+  color:rgba(255,200,200,0.55);
+  margin-top:6px;
+  animation:welcome-fs-anim 1.2s ease 1.4s both;
+}
+#welcome-fs kbd{
+  display:inline-block;
+  font-family:'Share Tech Mono',monospace;
+  font-size:0.9em;
+  padding:1px 7px;
+  border:1px solid rgba(255,43,43,0.45);
+  border-radius:5px;
+  background:rgba(255,43,43,0.10);
+  color:rgba(255,130,130,0.85);
+  box-shadow:0 0 8px rgba(255,43,43,0.18);
+}
+@keyframes welcome-fs-anim{
+  from{opacity:0;transform:translateY(6px);}
+  to{opacity:1;transform:translateY(0);}
+}
 
 /* Rotation animation du losange dans l'intro page */
 @keyframes diamond-rotate-in{
@@ -1119,6 +1143,7 @@ body.is-admin #sbn-admin{ display:flex; }
 .badge-kicked{ color:#ff9933;border-color:#ff9933;background:rgba(255,153,51,0.08); }
 .badge-verified{ color:#44ff99;border-color:#44ff99;background:rgba(68,255,153,0.06); }
 .badge-dev{ color:#a78bfa;border-color:#a78bfa;background:rgba(167,139,250,0.10); font-size:8px; }
+.badge-member{ color:#60a5fa;border-color:#3b82f6;background:rgba(59,130,246,0.08); }
 
 /* ── DEVELOPER badge in topbar ── */
 #tb-dev-badge{
@@ -1234,25 +1259,80 @@ body.is-developer .admin-dev-header{display:flex;}
 .fav-empty{font-size:11px;color:var(--faint);letter-spacing:0.1em;padding:8px 0;}
 
 /* ═══════════════════════════════════
-   📝 BLOC-NOTES
+   📝 STICKY NOTES
 ═══════════════════════════════════ */
-#sbp-notes textarea{
-  width:100%;min-height:180px;
-  background:#0a0101;border:1px solid var(--border);
-  color:var(--w);font-family:var(--font);font-size:12px;
-  padding:12px;outline:none;resize:vertical;
-  transition:border-color 0.2s;line-height:1.6;
-  box-sizing:border-box;
+#sticky-board{
+  position:fixed;left:0;top:0;bottom:0;
+  width:0;z-index:40;pointer-events:none;
 }
-#sbp-notes textarea:focus{border-color:rgba(255,43,43,0.55);}
-#sbp-notes textarea::placeholder{color:var(--faint);}
-.notes-meta{font-size:9px;color:var(--faint);letter-spacing:0.12em;margin-top:6px;text-align:right;}
-.notes-btn{
-  margin-top:8px;padding:9px 14px;font-family:var(--font);font-size:10px;
-  letter-spacing:0.15em;background:transparent;border:1px solid var(--border);
-  color:var(--dim);cursor:pointer;transition:all 0.2s;width:100%;
+.sticky-note{
+  position:fixed;
+  width:220px;min-height:160px;
+  background:linear-gradient(145deg,#1a0505,#120303);
+  border:1px solid var(--border2);
+  border-radius:16px;
+  box-shadow:0 4px 24px rgba(0,0,0,0.55),0 0 0 1px rgba(255,43,43,0.10);
+  display:flex;flex-direction:column;
+  overflow:hidden;pointer-events:all;
+  transition:box-shadow 0.2s;z-index:45;
 }
-.notes-btn:hover{color:var(--accent);border-color:var(--accent);}
+.sticky-note:hover{box-shadow:0 8px 32px rgba(0,0,0,0.7),0 0 0 1px rgba(255,43,43,0.25),0 0 20px rgba(255,43,43,0.08);}
+.sticky-note.dragging{box-shadow:0 16px 48px rgba(0,0,0,0.8),0 0 0 1px var(--accent),0 0 30px rgba(255,43,43,0.2);opacity:0.95;z-index:9999;}
+.sticky-header{
+  display:flex;align-items:center;gap:6px;
+  padding:10px 12px 8px;cursor:grab;
+  background:rgba(255,43,43,0.06);
+  border-bottom:1px solid var(--border);
+  border-radius:16px 16px 0 0;flex-shrink:0;user-select:none;
+}
+.sticky-header:active{cursor:grabbing;}
+.sticky-drag-dots{display:flex;flex-direction:column;gap:3px;flex-shrink:0;opacity:0.35;}
+.sticky-drag-dots span{display:block;width:12px;height:1.5px;background:var(--dim);border-radius:999px;}
+.sticky-title-input{
+  flex:1;background:transparent;border:none;outline:none;
+  color:var(--w);font-family:var(--font);font-size:10px;
+  letter-spacing:0.16em;caret-color:var(--accent);min-width:0;
+}
+.sticky-title-input::placeholder{color:var(--faint);}
+.sticky-close{background:none;border:none;color:var(--faint);cursor:pointer;font-size:13px;line-height:1;padding:0 2px;transition:color 0.15s;flex-shrink:0;}
+.sticky-close:hover{color:#ff4444;}
+.sticky-body{flex:1;padding:10px 12px;display:flex;flex-direction:column;gap:6px;}
+.sticky-textarea{
+  flex:1;width:100%;min-height:90px;
+  background:transparent;border:none;outline:none;resize:none;
+  color:#e8c5c5;font-family:var(--font);font-size:11px;
+  line-height:1.7;caret-color:var(--accent);box-sizing:border-box;
+}
+.sticky-textarea::placeholder{color:var(--faint);}
+.sticky-footer{display:flex;align-items:center;justify-content:space-between;padding:6px 12px 10px;flex-shrink:0;}
+.sticky-meta{font-size:8px;color:var(--faint);letter-spacing:0.1em;}
+.sticky-color-dots{display:flex;gap:5px;}
+.sticky-color-dot{width:10px;height:10px;border-radius:50%;cursor:pointer;border:1px solid transparent;transition:all 0.15s;}
+.sticky-color-dot:hover,.sticky-color-dot.active{transform:scale(1.35);border-color:rgba(255,255,255,0.4);}
+.sticky-resize{position:absolute;bottom:4px;right:6px;font-size:9px;color:var(--faint);cursor:se-resize;user-select:none;opacity:0.4;transition:opacity 0.15s;}
+.sticky-resize:hover{opacity:1;}
+/* Sidebar notes panel */
+.notes-add-btn{
+  display:flex;align-items:center;gap:10px;
+  width:calc(100% - 28px);margin:10px 14px;
+  padding:11px 14px;
+  background:rgba(255,43,43,0.06);border:1px solid var(--border2);
+  color:var(--w);font-family:var(--font);font-size:11px;
+  letter-spacing:0.12em;cursor:pointer;
+  transition:all 0.2s;border-radius:10px;
+}
+.notes-add-btn:hover{background:rgba(255,43,43,0.14);border-color:var(--accent);box-shadow:0 0 16px rgba(255,43,43,0.18);}
+.notes-list-sidebar{display:flex;flex-direction:column;gap:6px;padding:0 14px 14px;}
+.notes-list-item{
+  display:flex;align-items:center;gap:8px;padding:8px 10px;
+  border-radius:8px;border:1px solid var(--border);
+  background:rgba(255,255,255,0.02);cursor:pointer;transition:all 0.18s;
+}
+.notes-list-item:hover{background:rgba(255,43,43,0.06);border-color:var(--accent);}
+.notes-list-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.notes-list-name{flex:1;font-size:10px;color:var(--dim);letter-spacing:0.1em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.notes-list-del{background:none;border:none;color:var(--faint);cursor:pointer;font-size:11px;padding:0;transition:color 0.15s;}
+.notes-list-del:hover{color:#ff4444;}
 
 /* ═══════════════════════════════════
    📊 STATS DE VISITE
@@ -1410,6 +1490,7 @@ body.is-developer .admin-dev-header{display:flex;}
     </div>
     <div id="welcome-text">Welcome</div>
     <div id="welcome-sub">SENTINEL // INITIALISATION</div>
+    <div id="welcome-fs">Veuillez Mettre Le Site En Plein Écran &nbsp;—&nbsp; <kbd>F11</kbd></div>
   </div>
 </div>
 
@@ -1990,11 +2071,11 @@ body.is-developer .admin-dev-header{display:flex;}
   <!-- NOTES PANEL -->
   <div class="sb-panel" id="sbp-notes">
     <div class="sb-panel-title">// 📝 MES NOTES</div>
-    <div style="padding:14px;">
-      <textarea id="notes-area" placeholder="Tes notes personnelles…" oninput="autoSaveNotes()"></textarea>
-      <div class="notes-meta" id="notes-meta">Non sauvegardé</div>
-      <button class="notes-btn" onclick="clearNotes()">🗑 EFFACER LES NOTES</button>
-    </div>
+    <button class="notes-add-btn" onclick="createStickyNote()">
+      <span style="font-size:16px;">＋</span>
+      <span>NOUVELLE NOTE</span>
+    </button>
+    <div class="notes-list-sidebar" id="notes-list-sidebar"></div>
   </div>
 
   <!-- VISIT STATS PANEL -->
@@ -3075,7 +3156,7 @@ function sbShow(panel){
   // refresh data panels
   if(panel==='favs') renderSbFavs();
   if(panel==='visits') renderVisits();
-  if(panel==='notes') updateNotesMeta();
+  if(panel==='notes') renderStickyList();
   if(panel==='admin') loadAdminUsers();
 }
 
@@ -3646,43 +3727,276 @@ function renderSbFavs(){
 /* ══════════════════════════════════════
    📝 NOTES
 ══════════════════════════════════════ */
-let notesSaveTimer=null;
+/* ══════════════════════════════════════
+   📝 STICKY NOTES SYSTEM
+══════════════════════════════════════ */
+const STICKY_COLORS = [
+  {key:'red',   border:'#ff2b2b', bg:'rgba(255,43,43,0.08)',   dot:'#ff2b2b'},
+  {key:'orange',border:'#ff6a3d', bg:'rgba(255,106,61,0.08)',  dot:'#ff6a3d'},
+  {key:'blue',  border:'#3b82f6', bg:'rgba(59,130,246,0.08)',  dot:'#60a5fa'},
+  {key:'purple',border:'#a78bfa', bg:'rgba(167,139,250,0.08)', dot:'#a78bfa'},
+  {key:'green', border:'#22c55e', bg:'rgba(34,197,94,0.08)',   dot:'#22c55e'},
+];
+
+let stickyNotes = [];  // [{id, title, content, color, x, y, w, h}]
+let stickyDragState = null;
+
+function stickyStorageKey(){
+  return currentUser ? 'sentinel_sticky_'+currentUser.id : null;
+}
+function saveStickyNotes(){
+  const key = stickyStorageKey();
+  if(!key) return;
+  const data = stickyNotes.map(n=>({
+    id:n.id, title:n.title, content:n.content,
+    color:n.color, x:n.x, y:n.y,
+    w:n.w||220, h:n.h||160
+  }));
+  localStorage.setItem(key, JSON.stringify(data));
+  renderStickyList();
+}
 function loadNotes(){
   if(!currentUser) return;
-  const val = localStorage.getItem('sentinel_notes_'+currentUser.id)||'';
-  const area = document.getElementById('notes-area');
-  if(area) area.value=val;
-  updateNotesMeta();
+  const key = stickyStorageKey();
+  stickyNotes = [];
+  document.querySelectorAll('.sticky-note').forEach(el=>el.remove());
+  try{
+    const raw = localStorage.getItem(key);
+    if(raw){
+      const data = JSON.parse(raw);
+      data.forEach(n=>spawnStickyNote(n));
+    }
+  } catch(e){}
+  renderStickyList();
 }
-function autoSaveNotes(){
-  clearTimeout(notesSaveTimer);
-  const meta = document.getElementById('notes-meta');
-  if(meta) meta.textContent='Modification en cours…';
-  notesSaveTimer = setTimeout(()=>{
-    saveNotes();
-  }, 800);
+function createStickyNote(){
+  const id = 'sn_'+Date.now();
+  // Default position: cascade from top-left
+  const offset = (stickyNotes.length % 6) * 24;
+  const note = {
+    id, title:'Note '+(stickyNotes.length+1),
+    content:'', color:'red',
+    x: 20 + offset, y: 100 + offset,
+    w: 220, h: 200
+  };
+  spawnStickyNote(note);
+  saveStickyNotes();
+  // Focus textarea
+  setTimeout(()=>{
+    const el = document.getElementById('sn-ta-'+id);
+    if(el) el.focus();
+  }, 50);
 }
-function saveNotes(){
-  if(!currentUser) return;
-  const val = (document.getElementById('notes-area')||{}).value||'';
-  localStorage.setItem('sentinel_notes_'+currentUser.id, val);
-  updateNotesMeta();
+function spawnStickyNote(data){
+  const col = STICKY_COLORS.find(c=>c.key===data.color)||STICKY_COLORS[0];
+  const el = document.createElement('div');
+  el.className = 'sticky-note';
+  el.id = 'sn-'+data.id;
+  el.style.left = (data.x||20)+'px';
+  el.style.top  = (data.y||100)+'px';
+  el.style.width = (data.w||220)+'px';
+  el.style.minHeight = (data.h||160)+'px';
+  el.style.borderColor = col.border;
+  el.style.background = 'linear-gradient(145deg,'+col.bg+',#0a0101)';
+
+  const colorDotsHTML = STICKY_COLORS.map(c=>
+    `<div class="sticky-color-dot ${c.key===data.color?'active':''}"
+      style="background:${c.dot};border-color:${c.key===data.color?'rgba(255,255,255,0.5)':'transparent'}"
+      onclick="setStickyColor('${data.id}','${c.key}',this)" title="${c.key}"></div>`
+  ).join('');
+
+  el.innerHTML = `
+    <div class="sticky-header" id="sn-hdr-${data.id}">
+      <div class="sticky-drag-dots"><span></span><span></span><span></span></div>
+      <input class="sticky-title-input" id="sn-ti-${data.id}" type="text"
+        value="${escapeHtmlAttr(data.title)}" placeholder="Titre…"
+        oninput="updateStickyTitle('${data.id}',this.value)">
+      <button class="sticky-close" onclick="deleteStickyNote('${data.id}')" title="Supprimer">✕</button>
+    </div>
+    <div class="sticky-body">
+      <textarea class="sticky-textarea" id="sn-ta-${data.id}"
+        placeholder="Écris ta note ici…"
+        oninput="updateStickyContent('${data.id}',this.value)">${escapeHtml(data.content||'')}</textarea>
+    </div>
+    <div class="sticky-footer">
+      <div class="sticky-meta" id="sn-meta-${data.id}"></div>
+      <div class="sticky-color-dots">${colorDotsHTML}</div>
+    </div>
+    <div class="sticky-resize" id="sn-rsz-${data.id}" title="Redimensionner">⤡</div>
+  `;
+  document.body.appendChild(el);
+
+  // Update meta
+  updateStickyMeta(data.id, data.content||'');
+
+  // Store in array (update if exists)
+  const idx = stickyNotes.findIndex(n=>n.id===data.id);
+  if(idx>=0) stickyNotes[idx] = {...data};
+  else stickyNotes.push({...data});
+
+  // Drag
+  makeStickyDraggable(el, document.getElementById('sn-hdr-'+data.id), data.id);
+  // Resize
+  makeStickyResizable(el, document.getElementById('sn-rsz-'+data.id), data.id);
 }
-function updateNotesMeta(){
-  const meta = document.getElementById('notes-meta');
-  const val = (document.getElementById('notes-area')||{}).value||'';
-  if(!meta) return;
-  if(!val){ meta.textContent='Vide'; return; }
-  const chars = val.length;
-  const lines = val.split('\n').length;
-  meta.textContent=`${chars} car. · ${lines} ligne${lines>1?'s':''} · Sauvegardé`;
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escapeHtmlAttr(s){ return String(s).replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+function updateStickyTitle(id, val){
+  const n = stickyNotes.find(n=>n.id===id);
+  if(n){ n.title = val; saveStickyNotes(); }
 }
-function clearNotes(){
-  const area = document.getElementById('notes-area');
-  if(area) area.value='';
-  saveNotes();
-  toast('Notes effacées.');
+function updateStickyContent(id, val){
+  const n = stickyNotes.find(n=>n.id===id);
+  if(n){ n.content = val; updateStickyMeta(id,val); saveStickyNotes(); }
 }
+function updateStickyMeta(id, content){
+  const el = document.getElementById('sn-meta-'+id);
+  if(!el) return;
+  const chars = (content||'').length;
+  el.textContent = chars ? chars+' car.' : 'Vide';
+}
+function setStickyColor(id, colorKey, dotEl){
+  const col = STICKY_COLORS.find(c=>c.key===colorKey);
+  if(!col) return;
+  const n = stickyNotes.find(n=>n.id===id);
+  if(!n) return;
+  n.color = colorKey;
+  const el = document.getElementById('sn-'+id);
+  if(el){
+    el.style.borderColor = col.border;
+    el.style.background = 'linear-gradient(145deg,'+col.bg+',#0a0101)';
+    el.querySelectorAll('.sticky-color-dot').forEach((d,i)=>{
+      const c = STICKY_COLORS[i];
+      d.classList.toggle('active', c.key===colorKey);
+      d.style.borderColor = c.key===colorKey ? 'rgba(255,255,255,0.5)' : 'transparent';
+    });
+  }
+  saveStickyNotes();
+}
+function deleteStickyNote(id){
+  const el = document.getElementById('sn-'+id);
+  if(el){ el.style.opacity='0';el.style.transform='scale(0.9)';el.style.transition='all 0.2s';setTimeout(()=>el.remove(),200); }
+  stickyNotes = stickyNotes.filter(n=>n.id!==id);
+  saveStickyNotes();
+}
+function focusStickyNote(id){
+  const el = document.getElementById('sn-'+id);
+  if(el){
+    el.style.zIndex='9998';
+    const ta = document.getElementById('sn-ta-'+id);
+    if(ta) ta.focus();
+  }
+}
+function renderStickyList(){
+  const list = document.getElementById('notes-list-sidebar');
+  if(!list) return;
+  list.innerHTML='';
+  if(!stickyNotes.length){
+    list.innerHTML='<div style="font-size:10px;color:var(--faint);text-align:center;padding:8px 0;letter-spacing:0.1em;">Aucune note</div>';
+    return;
+  }
+  stickyNotes.forEach(n=>{
+    const col = STICKY_COLORS.find(c=>c.key===n.color)||STICKY_COLORS[0];
+    const row = document.createElement('div');
+    row.className='notes-list-item';
+    row.innerHTML=`
+      <div class="notes-list-dot" style="background:${col.dot};box-shadow:0 0 6px ${col.dot}55;"></div>
+      <span class="notes-list-name">${escapeHtml(n.title||'Note')}</span>
+      <button class="notes-list-del" onclick="event.stopPropagation();deleteStickyNote('${n.id}')" title="Supprimer">✕</button>
+    `;
+    row.addEventListener('click',()=>focusStickyNote(n.id));
+    list.appendChild(row);
+  });
+}
+
+/* ── Drag ── */
+function makeStickyDraggable(noteEl, handleEl, id){
+  let ox=0,oy=0,sx=0,sy=0,isDragging=false;
+  handleEl.addEventListener('mousedown',e=>{
+    if(e.target.tagName==='INPUT'||e.target.tagName==='BUTTON') return;
+    isDragging=true;
+    sx=e.clientX; sy=e.clientY;
+    const rect=noteEl.getBoundingClientRect();
+    ox=rect.left; oy=rect.top;
+    noteEl.classList.add('dragging');
+    noteEl.style.zIndex='9999';
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove',e=>{
+    if(!isDragging) return;
+    const nx = ox+(e.clientX-sx);
+    const ny = oy+(e.clientY-sy);
+    noteEl.style.left=Math.max(0,nx)+'px';
+    noteEl.style.top=Math.max(0,ny)+'px';
+  });
+  document.addEventListener('mouseup',e=>{
+    if(!isDragging) return;
+    isDragging=false;
+    noteEl.classList.remove('dragging');
+    noteEl.style.zIndex='45';
+    const n=stickyNotes.find(n=>n.id===id);
+    if(n){
+      n.x=parseInt(noteEl.style.left);
+      n.y=parseInt(noteEl.style.top);
+      saveStickyNotes();
+    }
+  });
+  // Touch support
+  handleEl.addEventListener('touchstart',e=>{
+    if(e.target.tagName==='INPUT'||e.target.tagName==='BUTTON') return;
+    const t=e.touches[0];
+    isDragging=true; sx=t.clientX; sy=t.clientY;
+    const rect=noteEl.getBoundingClientRect();
+    ox=rect.left; oy=rect.top;
+    noteEl.classList.add('dragging');
+  },{passive:true});
+  document.addEventListener('touchmove',e=>{
+    if(!isDragging) return;
+    const t=e.touches[0];
+    const nx=ox+(t.clientX-sx);
+    const ny=oy+(t.clientY-sy);
+    noteEl.style.left=Math.max(0,nx)+'px';
+    noteEl.style.top=Math.max(0,ny)+'px';
+  },{passive:true});
+  document.addEventListener('touchend',()=>{
+    if(!isDragging) return;
+    isDragging=false;
+    noteEl.classList.remove('dragging');
+    const n=stickyNotes.find(n=>n.id===id);
+    if(n){ n.x=parseInt(noteEl.style.left); n.y=parseInt(noteEl.style.top); saveStickyNotes(); }
+  });
+}
+
+/* ── Resize ── */
+function makeStickyResizable(noteEl, rszEl, id){
+  let isDragging=false,sx=0,sy=0,sw=0,sh=0;
+  rszEl.addEventListener('mousedown',e=>{
+    isDragging=true;
+    sx=e.clientX; sy=e.clientY;
+    sw=noteEl.offsetWidth; sh=noteEl.offsetHeight;
+    e.preventDefault(); e.stopPropagation();
+  });
+  document.addEventListener('mousemove',e=>{
+    if(!isDragging) return;
+    const nw=Math.max(180, sw+(e.clientX-sx));
+    const nh=Math.max(140, sh+(e.clientY-sy));
+    noteEl.style.width=nw+'px';
+    noteEl.style.minHeight=nh+'px';
+  });
+  document.addEventListener('mouseup',()=>{
+    if(!isDragging) return;
+    isDragging=false;
+    const n=stickyNotes.find(n=>n.id===id);
+    if(n){ n.w=noteEl.offsetWidth; n.h=noteEl.offsetHeight; saveStickyNotes(); }
+  });
+}
+
+/* Legacy stubs to avoid reference errors */
+function autoSaveNotes(){}
+function saveNotes(){}
+function updateNotesMeta(){}
+function clearNotes(){}
 
 /* ══════════════════════════════════════
    📊 STATS DE VISITE
@@ -3861,6 +4175,7 @@ function renderAdminUsers(){
     const badges = [];
     if(isAdmin)  badges.push('<span class="admin-badge badge-admin">ADMIN</span>');
     if(u.username.toUpperCase()==='JULIAN_DBOUBAYE') badges.push('<span class="admin-badge badge-dev">⬡ DÉVELOPPEUR</span>');
+    if(!isAdmin && u.username.toUpperCase()!=='JULIAN_DBOUBAYE') badges.push('<span class="admin-badge badge-member">● MEMBRE</span>');
     if(isBanned) badges.push('<span class="admin-badge badge-banned">BANNI</span>');
     if(isKicked) {
       const rem = Math.ceil((new Date(u.kicked_until)-now)/60000);
