@@ -2,13 +2,17 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#070101">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
 <title>SENTINEL // Portail</title>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>emailjs.init('UxZzE2X8ex-Ytnzuw');</script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 :root{
   --bg:#070101;--bg2:#120303;--bg3:#1b0505;--bg4:#260707;
   --border:#351010;--border2:#5a1515;
@@ -19,7 +23,7 @@
   --title:'Orbitron',monospace;
   --body:'Rajdhani',sans-serif;
 }
-html,body{width:100%;height:100%;background:var(--bg);color:var(--w);font-family:var(--font);overflow:hidden;}
+html,body{width:100%;height:100%;background:var(--bg);color:var(--w);font-family:var(--font);overflow:hidden;overscroll-behavior:none;-webkit-overflow-scrolling:touch;}
 
 /* ─────────────── GRID BG ─────────────── */
 #grid-bg{
@@ -54,7 +58,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--w);font-family
 /* ═══════════════════════════════════════
    PAGE 1 — INTRO (EYE)
 ════════════════════════════════════════ */
-#page-intro{flex-direction:column;gap:26px;padding:28px 18px;overflow-y:auto;}
+#page-intro{flex-direction:column;gap:clamp(10px,2.5vw,26px);padding:clamp(14px,3vw,28px) 16px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 
 #badge{
   font-family:var(--font);font-size:11px;letter-spacing:0.25em;color:var(--dim);
@@ -64,7 +68,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--w);font-family
   animation:fadeup 1s ease 0.3s both;
 }
 
-#eye-wrap{position:relative;width:clamp(430px,58vw,760px);height:clamp(270px,36vw,475px);animation:fadeup 1s ease 0.6s both;}
+#eye-wrap{position:relative;width:clamp(260px,88vw,760px);height:clamp(163px,55vw,475px);animation:fadeup 1s ease 0.6s both;}
 #eye-wrap::before{
   content:'';position:absolute;inset:10% -5%;z-index:-1;
   background:radial-gradient(ellipse at center,rgba(255,43,43,0.32),transparent 62%);
@@ -140,20 +144,21 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--w);font-family
 .intro-copy{font-family:var(--body);font-size:18px;line-height:1.45;color:#e8c5c5;max-width:620px;}
 .intro-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;}
 .intro-chip{font-size:10px;color:var(--dim);letter-spacing:0.16em;border:1px solid var(--border);padding:7px 10px;background:rgba(255,43,43,0.04);border-radius:6px;}
-.intro-controls{display:flex;align-items:center;justify-content:space-between;gap:16px;width:min(760px,92vw);animation:fadeup 1s ease 1.35s both;}
+.intro-controls{display:flex;align-items:center;justify-content:center;gap:16px;width:min(760px,92vw);animation:fadeup 1s ease 1.35s both;}
 .intro-dots{display:flex;gap:8px;}
 .intro-dot{width:28px;height:3px;background:var(--border2);transition:all 0.25s;border-radius:999px;}
 .intro-dot.active{background:var(--accent);box-shadow:0 0 12px rgba(255,43,43,0.6);}
 #intro-btn{
-  font-family:var(--title);font-size:12px;letter-spacing:0.35em;
-  padding:15px 52px;
+  font-family:var(--title);font-size:15px;letter-spacing:0.4em;
+  padding:20px 90px;
   border:none;
   background:linear-gradient(135deg,rgba(255,43,43,0.9),rgba(255,106,61,0.8));
   color:#fff;cursor:pointer;
   transition:all 0.3s;animation:fadeup 1s ease 1.4s both;
   position:relative;overflow:hidden;
-  border-radius:12px;
-  box-shadow:0 0 24px rgba(255,43,43,0.35),0 0 60px rgba(255,43,43,0.12),inset 0 1px 0 rgba(255,255,255,0.15);
+  border-radius:14px;
+  display:block;margin:0 auto;
+  box-shadow:0 0 32px rgba(255,43,43,0.45),0 0 70px rgba(255,43,43,0.16),inset 0 1px 0 rgba(255,255,255,0.18);
 }
 #intro-btn::before{
   content:'';position:absolute;inset:0;border-radius:12px;
@@ -180,7 +185,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--w);font-family
 /* ═══════════════════════════════════════
    PAGE 2 — AUTH
 ════════════════════════════════════════ */
-#page-auth{flex-direction:column;align-items:center;overflow-y:auto;padding:40px 16px;}
+#page-auth{flex-direction:column;align-items:center;overflow-y:auto;padding:40px 16px;-webkit-overflow-scrolling:touch;}
 
 .auth-box{
   width:100%;max-width:420px;
@@ -216,7 +221,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--w);font-family
 .field label{display:block;font-size:9px;color:var(--dim);letter-spacing:0.2em;margin-bottom:6px;}
 .field input{
   width:100%;background:#030305;border:1px solid var(--border);
-  color:#fff;font-family:var(--font);font-size:13px;
+  color:#fff;font-family:var(--font);font-size:16px;
   padding:10px 14px;outline:none;transition:border-color 0.2s;
 }
 .field input:focus{border-color:rgba(255,43,43,0.6);box-shadow:0 0 18px rgba(255,43,43,0.12);}
@@ -308,7 +313,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--w);font-family
 /* ═══════════════════════════════════════
    PAGE 3 — DASHBOARD
 ════════════════════════════════════════ */
-#page-dash{align-items:flex-start;overflow-y:auto;padding:0;}
+#page-dash{align-items:flex-start;overflow-y:auto;padding:0;-webkit-overflow-scrolling:touch;}
 #dash-inner{width:100%;max-width:1100px;margin:0 auto;padding:20px 20px 60px;}
 
 /* topbar */
@@ -358,13 +363,102 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--w);font-family
 .hero-stat-date{border-left:1px solid var(--border);padding-left:20px;min-width:130px;}
 .hs-label{font-size:9px;color:var(--dim);letter-spacing:0.15em;margin-top:2px;}
 
+/* ── Left panel layout ── */
+#dash-main-layout{
+  display:grid;
+  grid-template-columns:200px 1fr;
+  gap:18px;
+  align-items:start;
+}
+#dash-left-panel{
+  display:flex;flex-direction:column;gap:14px;
+  position:sticky;top:80px;
+}
+
+/* Online counter card */
+#online-counter-card{
+  background:var(--bg2);border:1px solid var(--border2);
+  padding:16px 14px;position:relative;overflow:hidden;
+  border-radius:10px;
+  box-shadow:0 0 0 1px rgba(255,43,43,0.1),0 0 20px rgba(255,43,43,0.05);
+}
+#online-counter-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,43,43,0.6),transparent);
+}
+.online-label{
+  font-size:8px;letter-spacing:0.25em;color:var(--dim);margin-bottom:10px;
+}
+.online-num-row{
+  display:flex;align-items:center;gap:8px;
+}
+#online-count{
+  font-family:var(--title);font-size:28px;font-weight:900;
+  color:var(--accent2);text-shadow:0 0 14px rgba(255,106,61,0.5);
+  line-height:1;
+}
+.online-dot-wrap{
+  display:flex;flex-direction:column;gap:3px;
+}
+.online-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--accent2);
+  box-shadow:0 0 8px rgba(255,106,61,0.8);
+  animation:online-pulse 1.8s ease-in-out infinite;
+}
+@keyframes online-pulse{
+  0%,100%{opacity:1;transform:scale(1);}
+  50%{opacity:0.4;transform:scale(0.7);}
+}
+.online-sub{
+  font-size:8px;letter-spacing:0.18em;color:var(--faint);margin-top:6px;
+}
+
+/* Portrait card */
+#portrait-card{
+  background:var(--bg2);border:1px solid var(--border2);
+  padding:14px;border-radius:10px;
+  box-shadow:0 0 0 1px rgba(255,43,43,0.1),0 0 20px rgba(255,43,43,0.05);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  position:relative;overflow:hidden;
+}
+#portrait-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,43,43,0.6),transparent);
+}
+.portrait-title{
+  font-size:8px;letter-spacing:0.22em;color:var(--dim);
+}
+#portrait-svg{
+  width:100%;max-width:160px;
+  filter:drop-shadow(0 0 10px rgba(255,43,43,0.4));
+}
+.portrait-name{
+  font-family:var(--title);font-size:9px;letter-spacing:0.2em;
+  color:var(--accent2);text-align:center;
+}
+.portrait-quote{
+  font-size:8px;color:var(--faint);letter-spacing:0.1em;
+  text-align:center;line-height:1.5;font-style:italic;
+  border-top:1px solid var(--border);padding-top:8px;width:100%;
+}
+
+@media(max-width:900px){
+  #dash-main-layout{grid-template-columns:1fr;}
+  #dash-left-panel{
+    position:static;
+    flex-direction:row;flex-wrap:wrap;
+  }
+  #online-counter-card,#portrait-card{flex:1;min-width:140px;}
+}
+
 /* search bar */
 #search-bar{
   display:flex;gap:10px;margin-bottom:20px;
 }
 #search-input{
   flex:1;background:var(--bg2);border:1px solid var(--border);
-  color:#fff;font-family:var(--font);font-size:12px;
+  color:#fff;font-family:var(--font);font-size:16px;
   padding:10px 16px;outline:none;transition:border-color 0.2s;
 }
 #search-input:focus{border-color:rgba(255,43,43,0.55);box-shadow:0 0 18px rgba(255,43,43,0.12);}
@@ -426,7 +520,10 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--w);font-family
 .intro-card::before{content:'';position:absolute;top:50%;left:50%;width:180%;padding-top:180%;background:conic-gradient(transparent 0deg,transparent 190deg,rgba(255,43,43,0.65) 230deg,rgba(255,106,61,1) 260deg,rgba(255,43,43,0.65) 300deg,transparent 340deg,transparent 360deg);animation:glow-spin 4.5s linear infinite;animation-delay:var(--sd,0s);z-index:0;}
 .intro-card::after{content:'';position:absolute;inset:1px;border-radius:15px;background:linear-gradient(160deg,rgba(20,4,4,0.99),rgba(8,1,1,1));z-index:1;}
 .intro-card:hover{transform:translateY(-3px);box-shadow:0 0 0 1px rgba(255,43,43,0.45),0 0 28px rgba(255,43,43,0.2),0 8px 24px rgba(0,0,0,0.5);}
-.intro-card:nth-child(1)::before{--sd:0s}.intro-card:nth-child(2)::before{--sd:-0.75s}.intro-card:nth-child(3)::before{--sd:-1.5s}.intro-card:nth-child(4)::before{--sd:-2.25s}.intro-card:nth-child(5)::before{--sd:-3s}.intro-card:nth-child(6)::before{--sd:-3.75s}
+.intro-card:nth-child(1)::before{--sd:0s}.intro-card:nth-child(2)::before{--sd:-0.75s}.intro-card:nth-child(3)::before{--sd:-1.5s}.intro-card:nth-child(4)::before{--sd:-2.25s}.intro-card:nth-child(5)::before{--sd:-3s}
+.intro-card:nth-child(6)::before{--sd:-3.75s}
+
+
 .intro-card-icon,.intro-card-title,.intro-card-desc{position:relative;z-index:2;}
 .intro-card-icon{font-size:26px;margin-bottom:10px;filter:drop-shadow(0 0 8px rgba(255,43,43,0.5));}
 .intro-card-title{font-family:var(--title);font-size:13px;font-weight:700;letter-spacing:0.12em;margin-bottom:8px;color:#ff8c3a;}
@@ -1524,30 +1621,222 @@ body.is-developer .admin-dev-header{display:flex;}
 .notif-empty{font-size:11px;color:var(--faint);text-align:center;padding:24px;letter-spacing:0.1em;}
 
 /* ═══════════════════════════════════
-   📱 MODE MOBILE
+   📱 RESPONSIVE — TABLETTE & MOBILE
 ═══════════════════════════════════ */
-@media(max-width:600px){
-  .auth-box{padding:28px 20px;}
-  .field-row{grid-template-columns:1fr;}
-  #dash-hero{flex-direction:column;gap:16px;}
-  #dash-hero::after{width:300px;height:160px;right:-60px;top:45%;}
-  #eye-wrap{width:min(92vw,480px);height:calc(min(92vw,480px) * 0.625);}
-  .intro-panel{padding:20px 18px;}
-  .intro-controls{flex-direction:column;align-items:stretch;}
-  #intro-btn{width:100%;padding-inline:18px;}
-  .card-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));}
-  #dash-inner{padding:10px 10px 60px!important;}
-  #topbar{padding:8px 10px;}
-  #hero-stats{flex-wrap:wrap;gap:12px;}
+
+/* ── Tablette large (≤900px) ── */
+@media(max-width:900px){
+  #right-sidebar{width:52px;}
+  #right-sidebar.open{width:280px;}
+  .card-grid{grid-template-columns:repeat(auto-fill,minmax(170px,1fr));}
+  #dash-hero{padding:22px 24px;}
+  #dash-inner{padding:16px 16px 60px;}
+  .intro-cards-grid{grid-template-columns:repeat(3,1fr);gap:10px;}
+}
+
+/* ── Tablette portrait (≤768px) ── */
+@media(max-width:768px){
+  html,body{font-size:14px;}
+  #page-intro{gap:14px;padding:16px 14px;}
+  #badge{font-size:10px;padding:6px 14px;}
+  #intro-title{font-size:clamp(22px,5vw,34px);}
+  #intro-sub{font-size:10px;}
+  .intro-cards-grid{grid-template-columns:repeat(2,1fr);gap:10px;width:min(640px,94vw);}
+  .intro-card{padding:16px 13px 14px;}
+  .intro-card-icon{font-size:22px;margin-bottom:8px;}
+  .intro-card-title{font-size:12px;}
+  .intro-card-desc{font-size:12px;}
+  .intro-controls{justify-content:center;}
+  #intro-btn{font-size:13px;padding:17px 60px;}
+
+  .auth-box{padding:30px 22px;max-width:380px;}
+  .auth-title{font-size:14px;}
+  .field input{font-size:12px;padding:9px 12px;}
+
+  #dash-inner{padding:12px 12px 60px;}
+  #topbar{padding:10px 12px;}
+  #tb-logo{font-size:11px;}
+  #tb-right{gap:10px;font-size:9px;}
+  #tb-logout{padding:4px 10px;font-size:8px;}
+  #dash-hero{padding:18px 20px;min-height:140px;flex-direction:column;gap:14px;align-items:flex-start;}
+  #dash-hero::after{display:none;}
+  #hero-greeting{font-size:18px;}
+  #hero-stats{flex-wrap:wrap;gap:14px;}
   .hero-stat-date{border-left:none;padding-left:0;}
-  #right-sidebar{width:48px!important;}
-  #right-sidebar.open{width:290px!important;}
-  .sb-label{font-size:11px;}
-  #notif-dropdown{right:10px;width:calc(100vw - 20px);}
-  .intro-cards-grid{grid-template-columns:repeat(2,1fr);}
+  #search-bar{flex-direction:column;gap:8px;}
+  #search-input{font-size:12px;}
+  #search-btn{width:100%;padding:10px;}
+  .card-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;}
+  .sc-name{font-size:12px;}
+  .sc-desc{font-size:10px;}
+  #right-sidebar{width:48px;}
+  #right-sidebar.open{width:260px;}
+  #notif-dropdown{right:8px;width:calc(100vw - 16px);}
+  #dash-footer{flex-direction:column;gap:6px;font-size:8px;}
+}
+
+/* ── Mobile (≤600px) ── */
+@media(max-width:600px){
+  #page-intro{gap:10px;padding:12px 10px;}
+  #badge{font-size:9px;padding:5px 12px;letter-spacing:0.18em;}
+  #intro-title{font-size:clamp(18px,6vw,28px);letter-spacing:0.15em;}
+  #intro-sub{font-size:9px;letter-spacing:0.2em;}
+  .intro-panel{padding:16px 14px;min-height:auto;}
+  .intro-heading{font-size:clamp(16px,4.5vw,24px);}
+  .intro-copy{font-size:15px;}
+  .intro-kicker{font-size:9px;}
+  .intro-cards-grid{grid-template-columns:repeat(2,1fr);gap:8px;width:min(480px,96vw);}
+  .intro-card{padding:14px 12px 12px;}
+  .intro-card-icon{font-size:20px;margin-bottom:6px;}
+  .intro-card-title{font-size:11px;letter-spacing:0.08em;}
+  .intro-card-desc{font-size:11px;line-height:1.45;}
+  .intro-controls{flex-direction:column;align-items:stretch;gap:12px;}
+  #intro-btn{width:100%;padding:17px 20px;font-size:13px;letter-spacing:0.3em;}
+  .intro-dots{justify-content:center;}
+
+  .auth-box{padding:24px 16px;}
+  .field-row{grid-template-columns:1fr;}
+  .auth-title{font-size:13px;}
+  .auth-sub{font-size:9px;}
+  .auth-btn{font-size:10px;padding:12px;}
+
+  .verify-box{padding:24px 16px;}
+  .otp-digit{width:40px;height:50px;font-size:19px;}
+  .otp-wrap{gap:6px;}
+
+  #dash-inner{padding:8px 8px 60px!important;}
+  #topbar{padding:8px 8px;}
+  #tb-logo{font-size:10px;gap:6px;}
+  #tb-logo svg{width:22px;height:14px;}
+  #tb-right{gap:8px;}
+  #tb-logout{display:none;}
+  #dash-hero{padding:14px 14px;min-height:auto;}
+  #hero-greeting{font-size:16px;}
+  .hs-val{font-size:16px;}
+  #hero-stats{gap:10px;}
+  .hero-stat-date{border-left:none;padding-left:0;}
   #search-bar{flex-direction:column;}
   #search-btn{width:100%;}
+  .card-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));}
+  #right-sidebar{width:44px;}
+  #right-sidebar.open{width:calc(100vw - 44px);max-width:300px;}
+  .sb-icon{min-width:38px;font-size:18px;}
+  #notif-dropdown{right:6px;width:calc(100vw - 12px);}
+  .cat-label{font-size:8px;}
+  #dash-footer{display:none;}
+  #hugo-badge{font-size:9px;padding:6px 12px;bottom:14px;left:14px;}
 }
+
+/* ── Très petit mobile (≤380px) ── */
+@media(max-width:380px){
+  .intro-cards-grid{grid-template-columns:1fr;}
+  .otp-digit{width:36px;height:46px;font-size:17px;}
+  .card-grid{grid-template-columns:1fr 1fr;}
+  #hero-greeting{font-size:14px;}
+}
+
+/* ── Touch : désactiver hover sur les cartes ── */
+@media(hover:none){
+  .site-card:hover{transform:none;}
+  .intro-card:hover{transform:none;}
+  #intro-btn:hover{transform:none;}
+}
+
+/* ════════════════════════════════════════
+   ✨ INTRO BG — WORLD MAP + PARTICLES
+════════════════════════════════════════ */
+#intro-bg-canvas{
+  position:fixed;inset:0;z-index:2;pointer-events:none;opacity:0;
+  transition:opacity 1.2s ease;
+}
+#intro-bg-canvas.visible{opacity:1;}
+
+/* ── Matrix rain ── */
+#matrix-canvas{
+  position:fixed;inset:0;z-index:2;pointer-events:none;
+  opacity:0;transition:opacity 1.5s ease;
+}
+#matrix-canvas.visible{opacity:1;}
+
+/* ── Floating tags ── */
+#intro-tags-wrap{
+  position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden;
+}
+.intro-float-tag{
+  position:absolute;
+  font-family:var(--font);font-size:10px;letter-spacing:0.18em;
+  color:var(--dim);border:1px solid var(--border);
+  padding:5px 10px;border-radius:6px;
+  background:rgba(7,1,1,0.6);
+  opacity:0;
+  animation:tag-float var(--dur,18s) ease-in-out var(--delay,0s) infinite;
+  white-space:nowrap;
+}
+@keyframes tag-float{
+  0%  {opacity:0;transform:translateY(0px);}
+  8%  {opacity:0.55;}
+  50% {opacity:0.35;transform:translateY(var(--rise,-40px));}
+  92% {opacity:0.55;}
+  100%{opacity:0;transform:translateY(var(--rise2,-80px));}
+}
+
+/* ── Counter ── */
+#intro-counter-wrap{
+  display:flex;align-items:baseline;gap:8px;
+  opacity:0;animation:fadeup 1s ease 2s both;
+  margin-top:6px;
+}
+#intro-counter-num{
+  font-family:var(--title);font-size:clamp(18px,2.5vw,24px);font-weight:900;
+  color:var(--accent2);
+  text-shadow:0 0 18px rgba(255,106,61,0.6);
+}
+#intro-counter-label{
+  font-family:var(--font);font-size:10px;letter-spacing:0.22em;color:var(--dim);
+}
+
+/* ── Glitch on intro-title ── */
+#intro-title{
+  font-family:var(--title);font-size:clamp(28px,4vw,42px);font-weight:900;
+  letter-spacing:0.25em;text-align:center;
+  animation:fadeup 1s ease 0.9s both;
+  position:relative;
+  background:linear-gradient(90deg,
+    #ff2b2b 0%,
+    #ff2b2b 30%,
+    #ff9a7a 50%,
+    #ff2b2b 70%,
+    #ff2b2b 100%
+  );
+  background-size:200% auto;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:fadeup 1s ease 0.9s both, sentinel-shimmer 4.5s linear 2s infinite;
+}
+@keyframes sentinel-shimmer{
+  0%{background-position:200% center;}
+  100%{background-position:-200% center;}
+}
+
+/* ── Card tooltips ── */
+.intro-card-tooltip{
+  position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) translateY(4px);
+  background:rgba(18,3,3,0.96);border:1px solid var(--border2);
+  font-family:var(--font);font-size:9px;letter-spacing:0.14em;color:var(--dim);
+  padding:7px 12px;border-radius:8px;white-space:nowrap;
+  pointer-events:none;z-index:20;
+  opacity:0;transition:opacity 0.2s,transform 0.2s;
+  box-shadow:0 4px 20px rgba(0,0,0,0.5),0 0 12px rgba(255,43,43,0.1);
+}
+.intro-card-tooltip::after{
+  content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:5px solid transparent;border-top-color:var(--border2);
+}
+.intro-card:hover .intro-card-tooltip{
+  opacity:1;transform:translateX(-50%) translateY(0);
+}
+
 </style>
 </head>
 <body>
@@ -1614,6 +1903,12 @@ body.is-developer .admin-dev-header{display:flex;}
 <div id="cursor-glow"></div>
 <canvas id="squares-canvas"></canvas>
 
+<!-- ████ INTRO BG EFFECTS ████ -->
+<canvas id="intro-bg-canvas"></canvas>
+<canvas id="matrix-canvas"></canvas>
+<div id="intro-tags-wrap"></div>
+
+
 <!-- ████ PAGE 1 : INTRO ████ -->
 <div class="page" id="page-intro">
   <div id="badge">Plateforme de cybersécurité de confiance</div>
@@ -1673,39 +1968,43 @@ body.is-developer .admin-dev-header{display:flex;}
     </svg>
   </div>
 
-  <div>
-    <div id="intro-title">SENTINEL</div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+    <div id="intro-title" data-text="SENTINEL">SENTINEL</div>
     <div id="intro-sub">PORTAIL D'ACCÈS SÉCURISÉ</div>
+    <div id="intro-counter-wrap">
+      <span id="intro-counter-num">0</span>
+      <span id="intro-counter-label">ressources indexées</span>
+    </div>
   </div>
 
   <!-- Feature cards grid -->
   <div class="intro-cards-grid">
-    <div class="intro-card">
+    <div class="intro-card" data-tooltip="Accès rapide à +200 outils triés par catégorie">
       <div class="intro-card-icon">🔍</div>
       <div class="intro-card-title" id="ic-heading1">Un portail centralisé</div>
       <div class="intro-card-desc" id="ic-copy1">SENTINEL regroupe des liens utiles pour la cybersécurité, l'OSINT, le développement et les outils d'analyse dans une interface rapide à parcourir.</div>
     </div>
-    <div class="intro-card">
+    <div class="intro-card" data-tooltip="Authentification locale — tes données ne quittent jamais le serveur">
       <div class="intro-card-icon">🛡</div>
       <div class="intro-card-title" id="ic-heading2">Accès protégé</div>
       <div class="intro-card-desc" id="ic-copy2">Authentification locale pour garder ton espace séparé et afficher une session personnelle sécurisée.</div>
     </div>
-    <div class="intro-card">
+    <div class="intro-card" data-tooltip="Recherche instantanée sur toutes les catégories en même temps">
       <div class="intro-card-icon">⚡</div>
       <div class="intro-card-title" id="ic-heading3">Ressources en un écran</div>
       <div class="intro-card-desc" id="ic-copy3">Cherche rapidement parmi les catégories, ouvre les plateformes importantes et garde une vue claire sur les ressources disponibles.</div>
     </div>
-    <div class="intro-card">
+    <div class="intro-card" data-tooltip="Claude, Cursor, Ollama, LM Studio et bien d'autres">
       <div class="intro-card-icon">🤖</div>
       <div class="intro-card-title" id="ic-heading4">Intelligence Artificielle</div>
       <div class="intro-card-desc" id="ic-copy4">Accès direct aux meilleurs outils IA : Claude, Cursor, Ollama et bien plus encore, locaux ou en ligne.</div>
     </div>
-    <div class="intro-card">
+    <div class="intro-card" data-tooltip="Shodan, IntelX, Maltego, Spiderfoot et des dizaines d'autres">
       <div class="intro-card-icon">🕵️</div>
       <div class="intro-card-title" id="ic-heading5">OSINT avancé</div>
       <div class="intro-card-desc" id="ic-copy5">Recherchez sur les réseaux sociaux, forums et plateformes publiques pour obtenir une vue complète d'une identité numérique.</div>
     </div>
-    <div class="intro-card">
+    <div class="intro-card" data-tooltip="4 thèmes, 4 langues, sidebar personnalisable">
       <div class="intro-card-icon">🎨</div>
       <div class="intro-card-title" id="ic-heading6">Interface personnalisable</div>
       <div class="intro-card-desc" id="ic-copy6">Thèmes couleur, changeur de langue et sidebar interactive pour une expérience adaptée à chaque utilisateur.</div>
@@ -1713,7 +2012,7 @@ body.is-developer .admin-dev-header{display:flex;}
   </div>
 
 
-  <button id="intro-btn" onclick="goToAuth()">NEXT</button>
+  <button id="intro-btn" onclick="goToAuth()">SUIVANT</button>
 </div>
 
 <!-- ████ PAGE 2 : AUTH ████ -->
@@ -1923,14 +2222,102 @@ body.is-developer .admin-dev-header{display:flex;}
       <div class="card-grid" id="favs-grid"></div>
     </div>
 
-    <!-- Search -->
-    <div id="search-bar">
-      <input id="search-input" type="text" placeholder="Rechercher un site..." oninput="filterSites(this.value)">
-      <button id="search-btn">CHERCHER</button>
-    </div>
+    <!-- Main layout : left panel + content -->
+    <div id="dash-main-layout">
 
-    <!-- Categories -->
-    <div id="categories-wrap"></div>
+      <!-- LEFT PANEL -->
+      <div id="dash-left-panel">
+
+        <!-- Compteur en ligne -->
+        <div id="online-counter-card">
+          <div class="online-label">// UTILISATEURS EN LIGNE</div>
+          <div class="online-num-row">
+            <div id="online-count">—</div>
+            <div class="online-dot-wrap">
+              <div class="online-dot"></div>
+            </div>
+          </div>
+          <div class="online-sub">CONNECTÉS MAINTENANT</div>
+        </div>
+
+        <!-- Portrait mystérieux -->
+        <div id="portrait-card">
+          <div class="portrait-title">// OBSERVATEUR</div>
+          <svg id="portrait-svg" viewBox="0 0 160 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="faceGrad" cx="50%" cy="40%" r="55%">
+                <stop offset="0%" stop-color="#2a0a0a"/>
+                <stop offset="100%" stop-color="#0a0000"/>
+              </radialGradient>
+              <radialGradient id="eyeGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="rgba(255,43,43,0.9)"/>
+                <stop offset="100%" stop-color="rgba(255,43,43,0)"/>
+              </radialGradient>
+              <filter id="pglow"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              <filter id="psoftglow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <!-- Shoulders -->
+            <path d="M30 200 L45 168 Q58 162 80 165 Q102 162 115 168 L130 200Z" fill="#0d0202"/>
+            <path d="M55 170 Q50 155 52 140 L52 128 Q80 138 108 128 L108 140 Q110 155 105 170 Q92 178 80 180 Q68 178 55 170Z" fill="#1a0505"/>
+            <!-- Head -->
+            <ellipse cx="80" cy="95" rx="46" ry="56" fill="url(#faceGrad)"/>
+            <path d="M42 110 Q44 140 58 158 Q68 168 80 170 Q92 168 102 158 Q116 140 118 110" fill="#180404" opacity="0.5"/>
+            <!-- Hair -->
+            <path d="M34 80 Q30 50 40 30 Q52 10 80 8 Q108 10 120 30 Q130 50 126 80" fill="#050000"/>
+            <path d="M34 80 Q36 60 42 45 Q55 20 80 18 Q105 20 118 45 Q124 60 126 80" fill="#0a0101"/>
+            <path d="M42 72 Q55 52 70 58 Q80 62 90 58 Q105 52 118 72" fill="#060101"/>
+            <path d="M50 78 Q62 62 75 65 Q80 67 85 65 Q98 62 110 78" fill="#080202"/>
+            <path d="M40 75 Q45 45 60 28" stroke="rgba(60,10,10,0.8)" stroke-width="2" fill="none"/>
+            <path d="M120 75 Q115 45 100 28" stroke="rgba(60,10,10,0.8)" stroke-width="2" fill="none"/>
+            <!-- Eyebrows -->
+            <path d="M52 88 Q62 82 72 85" stroke="#1a0505" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M88 85 Q98 82 108 88" stroke="#1a0505" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <!-- Left eye -->
+            <ellipse cx="62" cy="100" rx="10" ry="6" fill="url(#eyeGlow)" opacity="0.4"/>
+            <ellipse cx="62" cy="100" rx="9" ry="5.5" fill="#060000"/>
+            <ellipse cx="62" cy="100" rx="9" ry="5.5" fill="none" stroke="rgba(255,43,43,0.9)" stroke-width="0.8"/>
+            <circle cx="62" cy="100" r="3.5" fill="#1a0000"/>
+            <circle cx="62" cy="100" r="1.8" fill="#ff2b2b" opacity="0.9" filter="url(#pglow)"/>
+            <circle cx="59.5" cy="98.5" r="1" fill="rgba(255,200,180,0.7)"/>
+            <!-- Right eye -->
+            <ellipse cx="98" cy="100" rx="10" ry="6" fill="url(#eyeGlow)" opacity="0.4"/>
+            <ellipse cx="98" cy="100" rx="9" ry="5.5" fill="#060000"/>
+            <ellipse cx="98" cy="100" rx="9" ry="5.5" fill="none" stroke="rgba(255,43,43,0.9)" stroke-width="0.8"/>
+            <circle cx="98" cy="100" r="3.5" fill="#1a0000"/>
+            <circle cx="98" cy="100" r="1.8" fill="#ff2b2b" opacity="0.9" filter="url(#pglow)"/>
+            <circle cx="95.5" cy="98.5" r="1" fill="rgba(255,200,180,0.7)"/>
+            <!-- Nose -->
+            <path d="M78 110 Q80 118 82 110" stroke="rgba(120,40,40,0.5)" stroke-width="1" fill="none"/>
+            <!-- Mouth -->
+            <path d="M68 128 Q80 132 92 128" stroke="rgba(150,40,40,0.7)" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+            <!-- Scan line -->
+            <line x1="30" y1="100" x2="130" y2="100" stroke="rgba(255,43,43,0.15)" stroke-width="6">
+              <animate attributeName="opacity" values="0;0.6;0" dur="3s" repeatCount="indefinite"/>
+            </line>
+            <!-- Eye glow pulses -->
+            <circle cx="62" cy="100" r="6" fill="rgba(255,43,43,0.2)" filter="url(#psoftglow)">
+              <animate attributeName="opacity" values="0.3;1;0.3" dur="2.5s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="98" cy="100" r="6" fill="rgba(255,43,43,0.2)" filter="url(#psoftglow)">
+              <animate attributeName="opacity" values="0.3;1;0.3" dur="2.5s" begin="0.4s" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+          <div class="portrait-name">L'OBSERVATEUR</div>
+          <div class="portrait-quote">"Je suis celui qui juge depuis l'ombre."</div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT : search + categories -->
+      <div>
+        <div id="search-bar">
+          <input id="search-input" type="text" placeholder="Rechercher un site..." oninput="filterSites(this.value)">
+          <button id="search-btn">CHERCHER</button>
+        </div>
+        <div id="categories-wrap"></div>
+      </div>
+
+    </div>
 
     <!-- OSINT Guide -->
     <div id="osint-guide">
@@ -2487,7 +2874,7 @@ function renderIntroPart(){
   const btn=document.getElementById('intro-btn');
   parts.forEach((part,i)=>part.classList.toggle('active',i===introStep));
   dots.forEach((dot,i)=>dot.classList.toggle('active',i===introStep));
-  if(btn) btn.textContent=introStep===parts.length-1?t('btn_create'):'NEXT';
+  if(btn) btn.textContent=introStep===parts.length-1?t('btn_create'):t('btn_next');
 }
 function nextIntroPart(){
   const parts=document.querySelectorAll('.intro-part');
@@ -3026,6 +3413,8 @@ function buildDash(user, nowISO, prevISO){
   renderVisits();
   loadNotes();
   renderNotifs();
+  updateOnlineCount();
+  setInterval(updateOnlineCount, 60000);
   // Welcome notification
   setTimeout(()=>{ addNotif('👋', `Bienvenue ${user.firstName} — session démarrée`); }, 800);
   updateClock();
@@ -3535,7 +3924,7 @@ const LANGS = {
     copy2:'Avant d\'entrer dans le tableau de bord, le site demande une authentification locale pour garder ton espace séparé et afficher une session personnelle.',
     kicker3:'PARTIE 03 // TABLEAU DE BORD', heading3:'Les ressources en un écran',
     copy3:'Une fois connecté, tu peux chercher rapidement parmi les catégories, ouvrir les plateformes importantes et garder une vue claire sur les ressources disponibles.',
-    btn_next:'NEXT', btn_create:'CRÉER UN COMPTE',
+    btn_next:'SUIVANT', btn_create:'CRÉER UN COMPTE',
     auth_sub:'AUTHENTIFICATION REQUISE', tab_login:'CONNEXION', tab_register:'CRÉER UN COMPTE',
     lbl_email:'EMAIL OU USERNAME', lbl_pass:'MOT DE PASSE', btn_login:'SE CONNECTER',
     lbl_first:'PRÉNOM', lbl_last:'NOM', lbl_user:'USERNAME', lbl_email2:'ADRESSE EMAIL',
@@ -3603,7 +3992,7 @@ const LANGS = {
     copy2:'Vor dem Betreten des Dashboards verlangt die Website eine lokale Authentifizierung, um Ihren Bereich getrennt zu halten.',
     kicker3:'TEIL 03 // DASHBOARD', heading3:'Ressourcen auf einem Bildschirm',
     copy3:'Nach dem Einloggen können Sie schnell durch Kategorien suchen, wichtige Plattformen öffnen und einen klaren Überblick über verfügbare Ressourcen behalten.',
-    btn_next:'NEXT', btn_create:'KONTO ERSTELLEN',
+    btn_next:'WEITER', btn_create:'KONTO ERSTELLEN',
     auth_sub:'AUTHENTIFIZIERUNG ERFORDERLICH', tab_login:'ANMELDEN', tab_register:'KONTO ERSTELLEN',
     lbl_email:'E-MAIL ODER BENUTZERNAME', lbl_pass:'PASSWORT', btn_login:'EINLOGGEN',
     lbl_first:'VORNAME', lbl_last:'NACHNAME', lbl_user:'BENUTZERNAME', lbl_email2:'E-MAIL-ADRESSE',
@@ -3637,7 +4026,7 @@ const LANGS = {
     copy2:'Перед входом на панель управления сайт требует локальной аутентификации для разделения пространства и отображения персональной сессии.',
     kicker3:'ЧАСТЬ 03 // ПАНЕЛЬ УПРАВЛЕНИЯ', heading3:'Ресурсы на одном экране',
     copy3:'После входа вы можете быстро искать по категориям, открывать ключевые платформы и сохранять чёткий обзор доступных ресурсов.',
-    btn_next:'NEXT', btn_create:'СОЗДАТЬ АККАУНТ',
+    btn_next:'ДАЛЕЕ', btn_create:'СОЗДАТЬ АККАУНТ',
     auth_sub:'ТРЕБУЕТСЯ АУТЕНТИФИКАЦИЯ', tab_login:'ВХОД', tab_register:'СОЗДАТЬ АККАУНТ',
     lbl_email:'EMAIL ИЛИ ИМЯ ПОЛЬЗОВАТЕЛЯ', lbl_pass:'ПАРОЛЬ', btn_login:'ВОЙТИ',
     lbl_first:'ИМЯ', lbl_last:'ФАМИЛИЯ', lbl_user:'ИМЯ ПОЛЬЗОВАТЕЛЯ', lbl_email2:'АДРЕС EMAIL',
@@ -4702,6 +5091,376 @@ async function execAdminCmd(){
 // Load admin users when panel opens (hook into sbShow)
 const _origSbShow = sbShow;
 // We override panel opening inline — already handled in sbShow via "if(panel==='admin')"
+
+/* ══════════════════════════════════════════════════════
+   ✨ EFFET 1 — GLITCH TYPING sur le titre SENTINEL
+   Le titre se "décode" lettre par lettre au chargement
+══════════════════════════════════════════════════════ */
+(function initGlitchTyping(){
+  const el = document.getElementById('intro-title');
+  if(!el) return;
+  const finalText = 'SENTINEL';
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&!?';
+  let iteration = 0;
+  let interval = null;
+
+  function decode(){
+    el.innerText = finalText.split('').map((letter, i) => {
+      if(i < Math.floor(iteration)) return letter;
+      return chars[Math.floor(Math.random() * chars.length)];
+    }).join('');
+    el.setAttribute('data-text', el.innerText);
+    if(iteration >= finalText.length){
+      clearInterval(interval);
+      el.innerText = finalText;
+      el.setAttribute('data-text', finalText);
+    }
+    iteration += 0.35;
+  }
+
+  // Start after page is visible (1.5s delay)
+  setTimeout(()=>{
+    iteration = 0;
+    interval = setInterval(decode, 40);
+  }, 1500);
+})();
+
+/* ══════════════════════════════════════════════════════
+   ✨ EFFET 2 — CARTE DU MONDE + PINGS en arrière-plan
+══════════════════════════════════════════════════════ */
+(function initWorldMap(){
+  const canvas = document.getElementById('intro-bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+
+  function resize(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Points géographiques approximatifs (normalisés 0-1)
+  const hotspots = [
+    {x:0.22,y:0.38},{x:0.28,y:0.32},{x:0.50,y:0.30},{x:0.52,y:0.35},
+    {x:0.54,y:0.28},{x:0.56,y:0.32},{x:0.60,y:0.40},{x:0.65,y:0.35},
+    {x:0.70,y:0.38},{x:0.75,y:0.42},{x:0.78,y:0.55},{x:0.80,y:0.60},
+    {x:0.48,y:0.55},{x:0.45,y:0.60},{x:0.30,y:0.55},{x:0.18,y:0.45},
+    {x:0.85,y:0.35},{x:0.88,y:0.42},{x:0.90,y:0.50},
+  ];
+
+  const pings = [];
+  let connectionLines = [];
+
+  class Ping {
+    constructor(x, y){
+      this.ox = x; this.oy = y;
+      this.x = x * W; this.y = y * H;
+      this.r = 0; this.maxR = 28 + Math.random()*18;
+      this.life = 0; this.duration = 70 + Math.random()*30;
+    }
+    update(){ this.life++; this.r = (this.life/this.duration)*this.maxR; }
+    draw(){
+      const t = this.life/this.duration;
+      const alpha = Math.sin(t*Math.PI)*0.7;
+      this.x = this.ox * W; this.y = this.oy * H;
+      // Dot center
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, 3, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(255,106,61,${0.9*(1-t*0.5)})`;
+      ctx.fill();
+      // Ring
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(255,43,43,${alpha*0.6})`;
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+      // Second ring
+      if(this.r > 10){
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r*0.55, 0, Math.PI*2);
+        ctx.strokeStyle = `rgba(255,106,61,${alpha*0.4})`;
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+      }
+    }
+    get dead(){ return this.life >= this.duration; }
+  }
+
+  // Spawn connection lines between random hotspots
+  function spawnLine(){
+    const a = hotspots[Math.floor(Math.random()*hotspots.length)];
+    const b = hotspots[Math.floor(Math.random()*hotspots.length)];
+    if(a===b) return;
+    connectionLines.push({ax:a.x,ay:a.y,bx:b.x,by:b.y,life:0,duration:120,progress:0});
+  }
+
+  let pingTimer = 0;
+  let lineTimer = 0;
+
+  // Only draw when intro page is visible
+  function isIntroVisible(){
+    const pi = document.getElementById('page-intro');
+    return pi && !pi.classList.contains('hidden');
+  }
+
+  function frame(){
+    requestAnimationFrame(frame);
+    if(!isIntroVisible()){ ctx.clearRect(0,0,W,H); return; }
+
+    ctx.clearRect(0,0,W,H);
+
+    // Draw faint dot grid (map dots)
+    hotspots.forEach(h=>{
+      ctx.beginPath();
+      ctx.arc(h.x*W, h.y*H, 2, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(255,43,43,0.18)';
+      ctx.fill();
+    });
+
+    // Connection lines
+    connectionLines = connectionLines.filter(l=>{
+      l.life++;
+      l.progress = Math.min(1, l.life/60);
+      const t = l.life/l.duration;
+      const alpha = Math.sin(t*Math.PI)*0.25;
+      const ax=l.ax*W, ay=l.ay*H, bx=l.bx*W, by=l.by*H;
+      const ex = ax + (bx-ax)*l.progress;
+      const ey = ay + (by-ay)*l.progress;
+      ctx.beginPath();
+      ctx.moveTo(ax,ay);
+      ctx.lineTo(ex,ey);
+      ctx.strokeStyle = `rgba(255,106,61,${alpha})`;
+      ctx.lineWidth = 0.7;
+      ctx.setLineDash([4,6]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      return l.life < l.duration;
+    });
+
+    // Pings
+    pings.forEach(p=>{ p.update(); p.draw(); });
+    for(let i=pings.length-1;i>=0;i--){ if(pings[i].dead) pings.splice(i,1); }
+
+    pingTimer++;
+    if(pingTimer > 18){
+      pingTimer = 0;
+      const h = hotspots[Math.floor(Math.random()*hotspots.length)];
+      pings.push(new Ping(h.x, h.y));
+    }
+    lineTimer++;
+    if(lineTimer > 45){ lineTimer=0; spawnLine(); }
+  }
+
+  // Appear with slight delay
+  setTimeout(()=>{ canvas.classList.add('visible'); }, 800);
+  frame();
+})();
+
+/* ══════════════════════════════════════════════════════
+   ✨ EFFET 3 — TAGS FLOTTANTS autour de la page
+══════════════════════════════════════════════════════ */
+(function initFloatingTags(){
+  const wrap = document.getElementById('intro-tags-wrap');
+  if(!wrap) return;
+
+  const tags = [
+    'OSINT','PENTEST','RECON','OPSEC','DARKWEB','FIREWALL',
+    'PAYLOAD','EXPLOIT','METADATA','CIPHER','PROXY','VPN',
+    'SHODAN','MALTEGO','NMAP','BURPSUITE','WHOIS','DNS',
+    'FORENSICS','BOTNET','C2','PHISHING','HASH','TOR',
+    'INTEL','THREATMAP','API','SANDBOX','REVERSE','IDOR'
+  ];
+
+  const positions = [
+    {left:'2%',top:'12%'},{left:'88%',top:'8%'},{left:'5%',top:'55%'},
+    {left:'85%',top:'48%'},{left:'1%',top:'80%'},{left:'90%',top:'75%'},
+    {left:'12%',top:'30%'},{left:'78%',top:'22%'},{left:'8%',top:'68%'},
+    {left:'82%',top:'62%'},{left:'3%',top:'42%'},{left:'91%',top:'35%'},
+    {left:'15%',top:'85%'},{left:'75%',top:'88%'},{left:'6%',top:'18%'},
+  ];
+
+  const shuffled = [...tags].sort(()=>Math.random()-0.5);
+
+  positions.forEach((pos, i) => {
+    const tag = document.createElement('div');
+    tag.className = 'intro-float-tag';
+    tag.textContent = shuffled[i % shuffled.length];
+    const dur = 14 + Math.random()*10;
+    const delay = -(Math.random()*dur);
+    const rise = -(30 + Math.random()*50);
+    tag.style.cssText = `
+      left:${pos.left};top:${pos.top};
+      --dur:${dur.toFixed(1)}s;
+      --delay:${delay.toFixed(1)}s;
+      --rise:${rise}px;
+      --rise2:${rise*1.8}px;
+    `;
+    wrap.appendChild(tag);
+  });
+
+  // Hide tags when not on intro page
+  const observer = new MutationObserver(()=>{
+    const hidden = document.getElementById('page-intro')?.classList.contains('hidden');
+    wrap.style.opacity = hidden ? '0' : '1';
+    wrap.style.transition = 'opacity 0.5s';
+  });
+  const pi = document.getElementById('page-intro');
+  if(pi) observer.observe(pi, {attributes:true, attributeFilter:['class']});
+})();
+
+/* ══════════════════════════════════════════════════════
+   ✨ EFFET 4 — COMPTEUR animé de ressources
+══════════════════════════════════════════════════════ */
+(function initCounter(){
+  const numEl = document.getElementById('intro-counter-num');
+  if(!numEl) return;
+
+  // Count total sites in CATS
+  let total = 0;
+  if(typeof CATS !== 'undefined'){
+    CATS.forEach(c=>{ total += c.sites.length; });
+  } else {
+    total = 247;
+  }
+
+  let current = 0;
+  const duration = 2200; // ms
+  const startDelay = 2200;
+  const steps = 60;
+  const increment = total / steps;
+
+  function easeOut(t){ return 1 - Math.pow(1-t, 3); }
+
+  setTimeout(()=>{
+    let step = 0;
+    const iv = setInterval(()=>{
+      step++;
+      const t = step/steps;
+      current = Math.round(easeOut(t) * total);
+      numEl.textContent = current.toLocaleString('fr-FR');
+      if(step >= steps){ clearInterval(iv); numEl.textContent = total.toLocaleString('fr-FR'); }
+    }, duration/steps);
+  }, startDelay);
+})();
+
+/* ══════════════════════════════════════════════════════
+   ✨ EFFET MATRIX — Pluie de code verticale (intro only)
+══════════════════════════════════════════════════════ */
+(function initMatrixRain(){
+  const canvas = document.getElementById('matrix-canvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  const CHARS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*<>/\\[]{}';
+  const FONT_SIZE = 14;
+  let W, H, cols, drops;
+
+  function resize(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    cols = Math.floor(W / FONT_SIZE);
+    drops = new Array(cols).fill(1).map(() => Math.random() * -50);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Each column has its own speed & brightness
+  const speeds  = Array.from({length: 9999}, () => 0.3 + Math.random() * 0.7);
+  const bright  = Array.from({length: 9999}, () => Math.random());
+
+  function isIntroVisible(){
+    const pi = document.getElementById('page-intro');
+    return pi && !pi.classList.contains('hidden');
+  }
+
+  function frame(){
+    requestAnimationFrame(frame);
+    if(!isIntroVisible()){
+      ctx.clearRect(0, 0, W, H);
+      return;
+    }
+
+    // Fading trail
+    ctx.fillStyle = 'rgba(7,1,1,0.18)';
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.font = FONT_SIZE + 'px "Share Tech Mono", monospace';
+
+    for(let i = 0; i < cols; i++){
+      const speed = speeds[i] || 0.5;
+      // Skip dim columns for performance & sparsity
+      if(bright[i] < 0.35) {
+        drops[i] += speed * 0.4;
+        if(drops[i] * FONT_SIZE > H && Math.random() > 0.97) drops[i] = Math.random() * -30;
+        continue;
+      }
+
+      const char = CHARS[Math.floor(Math.random() * CHARS.length)];
+      const y = drops[i] * FONT_SIZE;
+      const x = i * FONT_SIZE;
+
+      // Head character — bright white/orange
+      if(bright[i] > 0.75){
+        ctx.fillStyle = 'rgba(255,200,180,0.92)';
+      } else {
+        ctx.fillStyle = 'rgba(255,43,43,0.85)';
+      }
+      ctx.fillText(char, x, y);
+
+      // Trail chars slightly above — red/dim
+      for(let t = 1; t <= 3; t++){
+        const trailChar = CHARS[Math.floor(Math.random() * CHARS.length)];
+        const alpha = (0.4 - t * 0.1) * (bright[i]);
+        ctx.fillStyle = `rgba(180,30,30,${alpha})`;
+        ctx.fillText(trailChar, x, y - t * FONT_SIZE);
+      }
+
+      drops[i] += speed;
+      if(drops[i] * FONT_SIZE > H && Math.random() > 0.975){
+        drops[i] = Math.random() * -40;
+      }
+    }
+  }
+
+  // Show after welcome overlay fades
+  setTimeout(() => {
+    canvas.classList.add('visible');
+    frame();
+  }, 1200);
+
+  // Hide when leaving intro page
+  const observer = new MutationObserver(() => {
+    const hidden = document.getElementById('page-intro')?.classList.contains('hidden');
+    canvas.style.opacity = hidden ? '0' : '1';
+  });
+  const pi = document.getElementById('page-intro');
+  if(pi) observer.observe(pi, {attributes: true, attributeFilter: ['class']});
+})();
+
+
+/* ══════════════════════════════════════════════════════
+   ✨ COMPTEUR UTILISATEURS EN LIGNE
+══════════════════════════════════════════════════════ */
+async function updateOnlineCount(){
+  const el = document.getElementById('online-count');
+  if(!el) return;
+  try {
+    const since = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+    const data = await sbFetch('GET', `users?last_login=gte.${encodeURIComponent(since)}&select=id`);
+    el.textContent = Array.isArray(data) ? data.length : '—';
+  } catch(e){ el.textContent = '—'; }
+}
+
+(function initCardTooltips(){
+  document.querySelectorAll('.intro-card[data-tooltip]').forEach(card=>{
+    const tip = document.createElement('div');
+    tip.className = 'intro-card-tooltip';
+    tip.textContent = card.getAttribute('data-tooltip');
+    card.style.position = 'relative';
+    card.appendChild(tip);
+  });
+})();
 
 </script>
 </body>
