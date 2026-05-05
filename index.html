@@ -1777,6 +1777,11 @@ body.is-developer .admin-dev-header{display:flex;}
         <input type="email" id="r-email" placeholder="jean@exemple.com">
       </div>
       <div class="field">
+        <label>DATE DE NAISSANCE</label>
+        <input type="date" id="r-dob" max="" style="color-scheme:dark;">
+        <div id="dob-hint" style="font-size:9px;color:var(--dim);margin-top:4px;letter-spacing:0.1em;"></div>
+      </div>
+      <div class="field">
         <label>MOT DE PASSE</label>
         <div class="pw-wrap">
           <input type="password" id="r-pass" placeholder="Min. 8 caractères" oninput="checkStrength(this.value)">
@@ -2823,12 +2828,19 @@ async function doRegister(){
   const last=document.getElementById('r-last').value.trim();
   const user=document.getElementById('r-user').value.trim();
   const email=document.getElementById('r-email').value.trim();
+  const dob=document.getElementById('r-dob').value;
   const pass=document.getElementById('r-pass').value;
   const pass2=document.getElementById('r-pass2').value;
   const msg=document.getElementById('r-msg');
 
-  if(!first||!last||!user||!email||!pass||!pass2){
+  if(!first||!last||!user||!email||!dob||!pass||!pass2){
     return setMsg(msg,'Tous les champs sont requis.','err');
+  }
+  // Vérification date de naissance
+  const dobDate=new Date(dob);
+  const today=new Date();
+  if(dobDate>today){
+    return setMsg(msg,'Date de naissance invalide.','err');
   }
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
     return setMsg(msg,'Adresse email invalide.','err');
@@ -2860,6 +2872,7 @@ async function doRegister(){
     first_name:first, last_name:last,
     username:user, email:email.toLowerCase(),
     password:btoa(pass),
+    birth_date:dob,
     created_at:new Date().toISOString(),
     email_verified:false
   };
@@ -3077,6 +3090,9 @@ function toast(msg,dur=2800){
 ══════════════════════════════════════ */
 (function init(){
   clearSession(); // déconnexion systématique au chargement
+  // Limite date naissance : aujourd'hui au maximum
+  const dobInput = document.getElementById('r-dob');
+  if(dobInput) dobInput.max = new Date().toISOString().split('T')[0];
   // show intro
 })();
 
