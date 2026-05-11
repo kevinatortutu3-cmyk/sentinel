@@ -2033,14 +2033,6 @@ body.is-developer .admin-dev-header{display:flex;}
 /* ═══════════════════════════════════
    💬 SENTINEL AI — PANEL LAYOUT
 ═══════════════════════════════════ */
-#ai-panel {
-  display: flex !important;
-  flex-direction: row !important;
-  overflow: hidden;
-}
-#ai-panel.open {
-  flex-direction: row !important;
-}
 
 /* Sidebar conversations */
 #ai-conv-sidebar {
@@ -2518,7 +2510,7 @@ body.is-developer .admin-dev-header{display:flex;}
         <span id="tb-dev-badge">⬡ DÉVELOPPEUR</span>
         <span id="tb-time" style="color:#333;">--:--</span>
         <button id="notif-bell" onclick="toggleNotif()" title="Notifications">🔔<span id="notif-badge"></span></button>
-        <button id="tb-ai-btn" onclick="toggleAIPanel()" title="Gemini Project AI">GEMINI</button>
+        <button id="tb-ai-btn" onclick="toggleAIPanel()" title="Sentinel AI">SENTINEL <svg id="tb-eye-svg" viewBox="0 0 24 14" xmlns="http://www.w3.org/2000/svg" width="20" height="12"><ellipse cx="12" cy="7" rx="11" ry="6" fill="none" stroke="currentColor" stroke-width="1.2"/><circle id="tb-pupil" cx="12" cy="7" r="3" fill="currentColor"/><circle cx="12" cy="7" r="1.2" fill="#070101"/></svg></button>
         <button id="tb-logout" onclick="doLogout()">DÉCONNEXION</button>
       </div>
     </div>
@@ -6015,16 +6007,31 @@ async function updateOnlineCount(){
   position:relative;overflow:hidden;
   display:flex;align-items:center;gap:6px;
 }
-/* Étoile Gemini dans le bouton */
-#tb-ai-btn::after{
-  content:'✦';
-  font-size:10px;
-  animation:gemini-star-spin 4s linear infinite;
+/* Œil dans le bouton — clignement */
+#tb-ai-btn::after{ content:none; }
+#tb-eye-svg{
   display:inline-block;
+  vertical-align:middle;
+  filter:drop-shadow(0 0 4px rgba(255,43,43,0.8));
+  flex-shrink:0;
 }
-@keyframes gemini-star-spin{
-  0%,100%{transform:rotate(0deg) scale(1);opacity:1;}
-  50%{transform:rotate(180deg) scale(1.2);opacity:0.7;}
+#tb-pupil{
+  animation:eye-breathe 3s ease-in-out infinite;
+  transform-origin:12px 7px;
+}
+@keyframes eye-breathe{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.15);}
+}
+/* Clignement via clip-path sur l'ellipse */
+#tb-eye-svg ellipse{
+  animation:eye-blink 4s ease-in-out infinite;
+  transform-origin:12px 7px;
+}
+@keyframes eye-blink{
+  0%,88%,100%{transform:scaleY(1);}
+  93%{transform:scaleY(0.05);}
+  96%{transform:scaleY(1);}
 }
 /* Sweep lumineux */
 #tb-ai-btn::before{
@@ -7095,33 +7102,6 @@ document.addEventListener('DOMContentLoaded', function() {
 ══════════════════════════════════════ -->
 <div id="ai-overlay" onclick="closeAIPanel()"></div>
 
-<!-- Template caché pour le welcome screen -->
-<template id="ai-welcome-template">
-  <div class="ai-welcome" id="ai-welcome">
-    <div class="ai-welcome-icon">
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2C12 2 13.6 8.6 18.5 12C13.6 15.4 12 22 12 22C12 22 10.4 15.4 5.5 12C10.4 8.6 12 2 12 2Z" fill="url(#gRed1w)"/>
-        <path d="M2 12C2 12 8.6 13.6 12 18.5C15.4 13.6 22 12 22 12C22 12 15.4 10.4 12 5.5C8.6 10.4 2 12 2 12Z" fill="url(#gRed2w)" opacity="0.8"/>
-        <defs>
-          <linearGradient id="gRed1w" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff2b2b"/><stop offset="100%" stop-color="#ff6a3d"/></linearGradient>
-          <linearGradient id="gRed2w" x1="2" y1="12" x2="22" y2="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff6a3d"/><stop offset="100%" stop-color="#ff2b2b"/></linearGradient>
-        </defs>
-      </svg>
-    </div>
-    <h3>SENTINEL AI ACTIF</h3>
-    <p>Assistant IA nouvelle génération · Spécialisé Python, HTML/CSS/JS et développement web.</p>
-    <div class="ai-gemini-badge">Sentinel AI · Développement &amp; OSINT</div>
-    <div class="ai-chips">
-      <div class="ai-chip" onclick="aiQuick('Crée-moi un script Python pour scraper un site web')">Scraper Python</div>
-      <div class="ai-chip" onclick="aiQuick('Explique-moi les bases de Python avec des exemples')">Bases Python</div>
-      <div class="ai-chip" onclick="aiQuick('Comment faire un menu hamburger responsive en HTML/CSS ?')">Menu responsive</div>
-      <div class="ai-chip" onclick="aiQuick('Crée-moi une API REST simple en Python avec Flask')">API Flask</div>
-      <div class="ai-chip" onclick="aiQuick('Comment optimiser mon site HTML pour le SEO ?')">SEO HTML</div>
-      <div class="ai-chip" onclick="aiQuick('Explique-moi les décorateurs Python')">Décorateurs Python</div>
-    </div>
-  </div>
-</template>
-
 <div id="ai-panel">
   <!-- SIDEBAR CONVERSATIONS -->
   <div id="ai-conv-sidebar">
@@ -7162,11 +7142,11 @@ document.addEventListener('DOMContentLoaded', function() {
       <div class="ai-welcome" id="ai-welcome">
         <div class="ai-welcome-icon">
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2C12 2 13.6 8.6 18.5 12C13.6 15.4 12 22 12 22C12 22 10.4 15.4 5.5 12C10.4 8.6 12 2 12 2Z" fill="url(#gRed1w)"/>
-            <path d="M2 12C2 12 8.6 13.6 12 18.5C15.4 13.6 22 12 22 12C22 12 15.4 10.4 12 5.5C8.6 10.4 2 12 2 12Z" fill="url(#gRed2w)" opacity="0.8"/>
+            <path d="M12 2C12 2 13.6 8.6 18.5 12C13.6 15.4 12 22 12 22C12 22 10.4 15.4 5.5 12C10.4 8.6 12 2 12 2Z" fill="url(#gRed1p)"/>
+            <path d="M2 12C2 12 8.6 13.6 12 18.5C15.4 13.6 22 12 22 12C22 12 15.4 10.4 12 5.5C8.6 10.4 2 12 2 12Z" fill="url(#gRed2p)" opacity="0.8"/>
             <defs>
-              <linearGradient id="gRed1w" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff2b2b"/><stop offset="100%" stop-color="#ff6a3d"/></linearGradient>
-              <linearGradient id="gRed2w" x1="2" y1="12" x2="22" y2="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff6a3d"/><stop offset="100%" stop-color="#ff2b2b"/></linearGradient>
+              <linearGradient id="gRed1p" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff2b2b"/><stop offset="100%" stop-color="#ff6a3d"/></linearGradient>
+              <linearGradient id="gRed2p" x1="2" y1="12" x2="22" y2="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff6a3d"/><stop offset="100%" stop-color="#ff2b2b"/></linearGradient>
             </defs>
           </svg>
         </div>
@@ -7256,7 +7236,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const msgs = document.getElementById('ai-messages');
     msgs.innerHTML = '';
     if (aiHistory.length === 0) {
-      msgs.innerHTML = document.getElementById('ai-welcome-template').innerHTML;
+      msgs.innerHTML = `<div class="ai-welcome" id="ai-welcome">
+        <div class="ai-welcome-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C12 2 13.6 8.6 18.5 12C13.6 15.4 12 22 12 22C12 22 10.4 15.4 5.5 12C10.4 8.6 12 2 12 2Z" fill="#ff2b2b"/><path d="M2 12C2 12 8.6 13.6 12 18.5C15.4 13.6 22 12 22 12C22 12 15.4 10.4 12 5.5C8.6 10.4 2 12 2 12Z" fill="#ff6a3d" opacity="0.8"/></svg>
+        </div>
+        <h3>SENTINEL AI ACTIF</h3>
+        <p>Assistant IA nouvelle génération · Spécialisé Python, HTML/CSS/JS et développement web.</p>
+        <div class="ai-gemini-badge">Sentinel AI · Développement &amp; OSINT</div>
+        <div class="ai-chips">
+          <div class="ai-chip" onclick="aiQuick('Crée-moi un script Python pour scraper un site web')">Scraper Python</div>
+          <div class="ai-chip" onclick="aiQuick('Explique-moi les bases de Python avec des exemples')">Bases Python</div>
+          <div class="ai-chip" onclick="aiQuick('Comment faire un menu hamburger responsive en HTML/CSS ?')">Menu responsive</div>
+          <div class="ai-chip" onclick="aiQuick('Crée-moi une API REST simple en Python avec Flask')">API Flask</div>
+          <div class="ai-chip" onclick="aiQuick('Comment optimiser mon site HTML pour le SEO ?')">SEO HTML</div>
+          <div class="ai-chip" onclick="aiQuick('Explique-moi les décorateurs Python')">Décorateurs Python</div>
+        </div>
+      </div>`;
     } else {
       aiHistory.forEach(m => {
         addMsgFromHistory(m.role, m.content);
@@ -7274,7 +7269,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (role === 'user') {
       av.textContent = '👤';
     } else {
-      av.innerHTML = `<svg viewBox="0 0 24 24" fill="none" width="15" height="15"><path d="M12 2C12 2 13.6 8.6 18.5 12C13.6 15.4 12 22 12 22C12 22 10.4 15.4 5.5 12C10.4 8.6 12 2 12 2Z" fill="url(#gAv1)"/><path d="M2 12C2 12 8.6 13.6 12 18.5C15.4 13.6 22 12 22 12C22 12 15.4 10.4 12 5.5C8.6 10.4 2 12 2 12Z" fill="url(#gAv2)" opacity="0.8"/><defs><linearGradient id="gAv1" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff2b2b"/><stop offset="100%" stop-color="#ff6a3d"/></linearGradient><linearGradient id="gAv2" x1="2" y1="12" x2="22" y2="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff6a3d"/><stop offset="100%" stop-color="#ff2b2b"/></linearGradient></defs></svg>`;
+      av.innerHTML = `<svg viewBox="0 0 24 24" fill="none" width="15" height="15"><path d="M12 2C12 2 13.6 8.6 18.5 12C13.6 15.4 12 22 12 22C12 22 10.4 15.4 5.5 12C10.4 8.6 12 2 12 2Z" fill="#ff2b2b"/><path d="M2 12C2 12 8.6 13.6 12 18.5C15.4 13.6 22 12 22 12C22 12 15.4 10.4 12 5.5C8.6 10.4 2 12 2 12Z" fill="#ff6a3d" opacity="0.8"/></svg>`;
     }
     const bubble = document.createElement('div');
     bubble.className = 'ai-bubble';
@@ -7371,7 +7366,7 @@ Règles :
       panel.classList.add('open');
       overlay.classList.add('open');
       btn && btn.classList.add('active');
-      document.getElementById('ai-textarea').focus();
+      setTimeout(()=>{ const t=document.getElementById('ai-textarea'); if(t) t.focus(); }, 100);
     }
   };
 
@@ -7407,7 +7402,7 @@ Règles :
     av.className = 'ai-avatar';
     av.textContent = role === 'user' ? '👤' : '';
     if (role === 'bot') {
-      av.innerHTML = `<svg viewBox="0 0 24 24" fill="none" width="15" height="15"><path d="M12 2C12 2 13.6 8.6 18.5 12C13.6 15.4 12 22 12 22C12 22 10.4 15.4 5.5 12C10.4 8.6 12 2 12 2Z" fill="url(#gAv1)"/><path d="M2 12C2 12 8.6 13.6 12 18.5C15.4 13.6 22 12 22 12C22 12 15.4 10.4 12 5.5C8.6 10.4 2 12 2 12Z" fill="url(#gAv2)" opacity="0.8"/><defs><linearGradient id="gAv1" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff2b2b"/><stop offset="100%" stop-color="#ff6a3d"/></linearGradient><linearGradient id="gAv2" x1="2" y1="12" x2="22" y2="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff6a3d"/><stop offset="100%" stop-color="#ff2b2b"/></linearGradient></defs></svg>`;
+      av.innerHTML = `<svg viewBox="0 0 24 24" fill="none" width="15" height="15"><path d="M12 2C12 2 13.6 8.6 18.5 12C13.6 15.4 12 22 12 22C12 22 10.4 15.4 5.5 12C10.4 8.6 12 2 12 2Z" fill="#ff2b2b"/><path d="M2 12C2 12 8.6 13.6 12 18.5C15.4 13.6 22 12 22 12C22 12 15.4 10.4 12 5.5C8.6 10.4 2 12 2 12Z" fill="#ff6a3d" opacity="0.8"/></svg>`;
     }
     const bubble = document.createElement('div');
     bubble.className = 'ai-bubble';
