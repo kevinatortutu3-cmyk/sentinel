@@ -2029,6 +2029,153 @@ body.is-developer .admin-dev-header{display:flex;}
   opacity:1;transform:translateX(-50%) translateY(0);
 }
 
+
+/* ═══════════════════════════════════
+   💬 SENTINEL AI — PANEL LAYOUT
+═══════════════════════════════════ */
+#ai-panel {
+  display: flex !important;
+  flex-direction: row !important;
+  overflow: hidden;
+}
+#ai-panel.open {
+  flex-direction: row !important;
+}
+
+/* Sidebar conversations */
+#ai-conv-sidebar {
+  width: 200px;
+  min-width: 200px;
+  background: rgba(5, 0, 0, 0.6);
+  border-right: 1px solid rgba(255,43,43,0.18);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+#ai-conv-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 10px 8px;
+  border-bottom: 1px solid rgba(255,43,43,0.18);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+#ai-new-conv-btn {
+  background: linear-gradient(135deg, rgba(255,43,43,0.85), rgba(255,106,61,0.75));
+  border: none;
+  color: #fff;
+  font-family: var(--font);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  padding: 5px 9px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s;
+  box-shadow: 0 0 10px rgba(255,43,43,0.25);
+}
+#ai-new-conv-btn:hover {
+  box-shadow: 0 0 18px rgba(255,43,43,0.45);
+  transform: translateY(-1px);
+}
+#ai-conv-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+#ai-conv-list::-webkit-scrollbar { width: 2px; }
+#ai-conv-list::-webkit-scrollbar-thumb { background: rgba(255,43,43,0.3); border-radius: 2px; }
+.ai-conv-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  transition: all 0.18s;
+  cursor: pointer;
+  background: rgba(255,255,255,0.02);
+}
+.ai-conv-item:hover {
+  background: rgba(255,43,43,0.07);
+  border-color: rgba(255,43,43,0.2);
+}
+.ai-conv-item.active {
+  background: rgba(255,43,43,0.12);
+  border-color: rgba(255,43,43,0.4);
+}
+.ai-conv-info {
+  flex: 1;
+  padding: 7px 8px;
+  min-width: 0;
+}
+.ai-conv-title {
+  font-family: var(--font);
+  font-size: 10px;
+  color: var(--w);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+.ai-conv-date {
+  font-size: 8px;
+  color: var(--accent2);
+  letter-spacing: 0.1em;
+  margin-bottom: 2px;
+}
+.ai-conv-preview {
+  font-size: 9px;
+  color: var(--faint);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ai-conv-del {
+  background: none;
+  border: none;
+  color: var(--faint);
+  cursor: pointer;
+  font-size: 10px;
+  padding: 7px 6px 0 0;
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+.ai-conv-del:hover { color: #ff4444; }
+.ai-conv-empty {
+  font-size: 9px;
+  color: var(--faint);
+  text-align: center;
+  padding: 16px 8px;
+  letter-spacing: 0.1em;
+}
+
+/* Main chat area */
+#ai-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* Mobile: hide sidebar when narrow */
+@media (max-width: 540px) {
+  #ai-conv-sidebar { width: 150px; min-width: 150px; }
+  #ai-conv-sidebar-header span { display: none; }
+  #ai-new-conv-btn { font-size: 8px; padding: 4px 7px; }
+}
+@media (max-width: 400px) {
+  #ai-conv-sidebar { width: 110px; min-width: 110px; }
+}
+
 </style>
 </head>
 <body>
@@ -2371,7 +2518,7 @@ body.is-developer .admin-dev-header{display:flex;}
         <span id="tb-dev-badge">⬡ DÉVELOPPEUR</span>
         <span id="tb-time" style="color:#333;">--:--</span>
         <button id="notif-bell" onclick="toggleNotif()" title="Notifications">🔔<span id="notif-badge"></span></button>
-        <button id="tb-ai-btn" onclick="toggleAIPanel()" title="Assistant IA">⚡ IA</button>
+        <button id="tb-ai-btn" onclick="toggleAIPanel()" title="Gemini Project AI">GEMINI</button>
         <button id="tb-logout" onclick="doLogout()">DÉCONNEXION</button>
       </div>
     </div>
@@ -5852,221 +5999,473 @@ async function updateOnlineCount(){
 #cmt-box .cmt-input::placeholder{color:rgba(92,36,36,0.6);font-style:italic;}
 
 /* ═══════════════════════════════════════
-   SENTINEL AI — CHATBOT PANEL
+   ✦ GEMINI PROJECT — CHATBOT PANEL
+   Couleurs site : rouge & noir — identité Gemini
 ════════════════════════════════════════ */
+
+/* Bouton topbar */
 #tb-ai-btn{
-  background:linear-gradient(135deg,rgba(255,43,43,0.18),rgba(255,106,61,0.12));
-  border:1px solid rgba(255,43,43,0.45);
-  color:var(--accent2);font-family:var(--font);font-size:9px;
-  padding:5px 14px;cursor:pointer;letter-spacing:0.2em;
-  transition:all 0.2s;border-radius:4px;
-  text-shadow:0 0 10px rgba(255,106,61,0.5);
-  box-shadow:0 0 12px rgba(255,43,43,0.12);
+  background:linear-gradient(135deg,rgba(255,43,43,0.15),rgba(97,9,9,0.2));
+  border:1px solid rgba(255,43,43,0.4);
+  color:var(--accent2);font-family:var(--title);font-size:8px;
+  padding:6px 16px;cursor:pointer;letter-spacing:0.3em;
+  transition:all 0.25s;border-radius:20px;
+  text-shadow:0 0 12px rgba(255,43,43,0.6);
+  box-shadow:0 0 16px rgba(255,43,43,0.1),inset 0 1px 0 rgba(255,255,255,0.05);
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;gap:6px;
 }
-#tb-ai-btn:hover{border-color:var(--accent);color:#fff;box-shadow:0 0 20px rgba(255,43,43,0.3);}
-#tb-ai-btn.active{background:linear-gradient(135deg,rgba(255,43,43,0.3),rgba(255,106,61,0.2));border-color:var(--accent);}
+/* Étoile Gemini dans le bouton */
+#tb-ai-btn::after{
+  content:'✦';
+  font-size:10px;
+  animation:gemini-star-spin 4s linear infinite;
+  display:inline-block;
+}
+@keyframes gemini-star-spin{
+  0%,100%{transform:rotate(0deg) scale(1);opacity:1;}
+  50%{transform:rotate(180deg) scale(1.2);opacity:0.7;}
+}
+/* Sweep lumineux */
+#tb-ai-btn::before{
+  content:'';position:absolute;top:-50%;left:-60%;
+  width:35%;height:200%;
+  background:linear-gradient(90deg,transparent,rgba(255,43,43,0.2),transparent);
+  transform:skewX(-20deg);
+  animation:gemini-btn-sweep 3s ease-in-out infinite;
+}
+@keyframes gemini-btn-sweep{
+  0%,100%{left:-60%;opacity:0;}
+  30%{opacity:1;}60%{left:130%;opacity:0;}
+}
+#tb-ai-btn:hover{
+  background:linear-gradient(135deg,rgba(255,43,43,0.28),rgba(97,9,9,0.3));
+  border-color:var(--accent);color:#fff;
+  box-shadow:0 0 28px rgba(255,43,43,0.3),inset 0 1px 0 rgba(255,255,255,0.1);
+}
+#tb-ai-btn.active{
+  background:linear-gradient(135deg,rgba(255,43,43,0.32),rgba(97,9,9,0.35));
+  border-color:var(--accent);color:#fff;
+}
 
 /* Overlay */
 #ai-overlay{
   display:none;position:fixed;inset:0;z-index:9000;
-  background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);
+  background:rgba(0,0,0,0.7);backdrop-filter:blur(5px);
   animation:fadein 0.2s ease;
 }
 #ai-overlay.open{display:block;}
 
-/* Panel */
+/* ── Panel principal ── */
 #ai-panel{
   position:fixed;bottom:0;right:0;
-  width:min(430px,100vw);
-  height:min(680px,92dvh);
+  width:min(680px,100vw);
+  height:min(700px,93dvh);
   z-index:9001;
-  background:linear-gradient(180deg,rgba(14,2,2,0.99),rgba(7,1,1,1));
+  background:linear-gradient(160deg,rgba(10,1,1,0.99) 0%,rgba(7,0,0,1) 100%);
   border:1px solid var(--border2);
-  border-bottom:none;
-  border-right:none;
-  border-radius:20px 0 0 0;
-  display:flex;flex-direction:column;
+  border-bottom:none;border-right:none;
+  border-radius:22px 0 0 0;
+  display:flex;flex-direction:row;
   transform:translateY(100%);
-  transition:transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94);
-  box-shadow:-4px -4px 40px rgba(255,43,43,0.12),0 0 0 1px rgba(255,43,43,0.1);
+  transition:transform 0.4s cubic-bezier(0.22,1,0.36,1);
+  box-shadow:
+    -6px -6px 50px rgba(255,43,43,0.1),
+    0 0 0 1px rgba(255,43,43,0.08),
+    inset 0 0 60px rgba(255,43,43,0.02);
   overflow:hidden;
 }
 #ai-panel.open{transform:translateY(0);}
+#ai-main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  min-width:0;
+  position:relative;
+  z-index:1;
+}
 
-/* Panel top glow line */
+/* Grille de fond — même style que le site */
+#ai-panel::after{
+  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,43,43,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,43,43,0.04) 1px,transparent 1px);
+  background-size:32px 32px;
+}
+
+/* Ligne glow top — style Gemini mais en rouge */
 #ai-panel::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--accent),rgba(255,106,61,0.8),var(--accent),transparent);
-  z-index:2;
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;z-index:3;
+  background:linear-gradient(90deg,
+    transparent 0%,
+    var(--accent) 25%,
+    #ff8c3a 50%,
+    var(--accent) 75%,
+    transparent 100%
+  );
+  background-size:200% 100%;
+  animation:gemini-sweep 3.5s ease-in-out infinite;
+  filter:blur(0.3px);
+}
+@keyframes gemini-sweep{
+  0%{background-position:100% 0;}
+  50%{background-position:0% 0;}
+  100%{background-position:100% 0;}
 }
 
-/* AI Header */
+/* ── Header ── */
 #ai-header{
-  display:flex;align-items:center;gap:10px;
-  padding:14px 16px;
+  display:flex;align-items:center;gap:12px;
+  padding:16px 18px;
   border-bottom:1px solid var(--border);
-  background:rgba(18,3,3,0.6);
+  background:linear-gradient(180deg,rgba(20,3,3,0.7),rgba(10,1,1,0.4));
   flex-shrink:0;position:relative;z-index:1;
+  backdrop-filter:blur(8px);
 }
+
+/* Logo étoile Gemini — rouge & noir */
 #ai-logo{
-  width:34px;height:34px;border-radius:8px;flex-shrink:0;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  display:flex;align-items:center;justify-content:center;font-size:16px;
-  box-shadow:0 0 18px rgba(255,43,43,0.35);
+  width:40px;height:40px;border-radius:12px;flex-shrink:0;
+  background:linear-gradient(135deg,#1b0303,#2d0606);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:
+    0 0 0 1px rgba(255,43,43,0.4),
+    0 0 20px rgba(255,43,43,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  position:relative;
 }
+#ai-logo svg{
+  width:22px;height:22px;
+  filter:drop-shadow(0 0 7px rgba(255,43,43,0.9)) drop-shadow(0 0 16px rgba(255,106,61,0.5));
+  animation:gemini-logo-breathe 3s ease-in-out infinite;
+}
+@keyframes gemini-logo-breathe{
+  0%,100%{filter:drop-shadow(0 0 7px rgba(255,43,43,0.9)) drop-shadow(0 0 16px rgba(255,106,61,0.5));transform:scale(1);}
+  50%{filter:drop-shadow(0 0 14px rgba(255,43,43,1)) drop-shadow(0 0 30px rgba(255,106,61,0.8));transform:scale(1.1);}
+}
+/* Anneau orbital rouge */
+#ai-logo::before{
+  content:'';position:absolute;width:54px;height:54px;
+  border-radius:50%;
+  border:1px solid transparent;
+  border-top-color:rgba(255,43,43,0.7);
+  border-right-color:rgba(255,106,61,0.4);
+  animation:gemini-orbit 2.8s linear infinite;
+  pointer-events:none;
+}
+@keyframes gemini-orbit{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+
+/* Nom + sous-titre dans le header */
+#ai-header-info{flex:1;}
 #ai-header-info h2{
   font-family:var(--title);font-size:12px;font-weight:900;
-  letter-spacing:0.25em;color:var(--accent2);
+  letter-spacing:0.3em;
+  background:linear-gradient(90deg,var(--accent),#ff8c3a,var(--accent2),var(--accent));
+  background-size:250% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:gemini-name-shimmer 5s linear infinite;
 }
+@keyframes gemini-name-shimmer{
+  0%{background-position:200% center;}
+  100%{background-position:-200% center;}
+}
+/* Badge "✦ Gemini" sous le titre */
 #ai-header-info p{
-  font-family:var(--font);font-size:9px;color:var(--dim);letter-spacing:0.15em;margin-top:2px;
+  font-family:var(--font);font-size:8px;
+  color:var(--dim);letter-spacing:0.18em;margin-top:4px;
+  display:flex;align-items:center;gap:5px;
 }
-#ai-status-dot{
-  width:7px;height:7px;border-radius:50%;background:var(--accent);
-  box-shadow:0 0 8px var(--accent);animation:online-pulse 2s infinite;margin-left:auto;
+#ai-header-info p::before{
+  content:'✦';
+  color:var(--accent);font-size:8px;
+  animation:gemini-star-spin 3s linear infinite;
+  display:inline-block;
 }
-#ai-close{
-  background:none;border:1px solid var(--border);color:var(--faint);
-  width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:14px;
-  display:flex;align-items:center;justify-content:center;transition:all 0.2s;
-}
-#ai-close:hover{border-color:var(--accent);color:var(--accent);}
 
-/* API Key bar */
+/* Dot statut */
+#ai-status-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--accent2);
+  box-shadow:0 0 10px var(--accent2),0 0 20px rgba(255,106,61,0.4);
+  animation:online-pulse 2.2s ease-in-out infinite;
+  flex-shrink:0;
+}
+
+#ai-close{
+  background:none;border:1px solid var(--border);
+  color:var(--faint);
+  width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:14px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;flex-shrink:0;
+}
+#ai-close:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 12px rgba(255,43,43,0.2);}
+
+/* ── Barre clé API ── */
 #ai-key-bar{
-  display:flex;align-items:center;gap:8px;padding:8px 14px;
-  background:rgba(255,43,43,0.04);border-bottom:1px solid var(--border);
-  flex-shrink:0;flex-wrap:wrap;
+  display:flex;align-items:center;gap:8px;padding:8px 16px;
+  background:rgba(255,43,43,0.03);
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;flex-wrap:wrap;position:relative;z-index:1;
 }
 #ai-key-bar span{font-size:9px;color:var(--accent);font-family:var(--font);letter-spacing:0.15em;white-space:nowrap;}
 #ai-key-input{
   flex:1;min-width:140px;
-  background:rgba(3,0,5,0.8);border:1px solid var(--border2);border-radius:4px;
-  padding:5px 8px;color:var(--w);font-family:var(--font);font-size:10px;
-  outline:none;transition:border-color 0.2s;letter-spacing:0.05em;
+  background:rgba(3,0,0,0.8);border:1px solid var(--border2);border-radius:6px;
+  padding:5px 10px;color:var(--w);font-family:var(--font);font-size:10px;
+  outline:none;transition:border-color 0.2s,box-shadow 0.2s;letter-spacing:0.05em;
 }
-#ai-key-input:focus{border-color:rgba(255,43,43,0.5);}
+#ai-key-input:focus{border-color:rgba(255,43,43,0.55);box-shadow:0 0 0 2px rgba(255,43,43,0.08);}
 #ai-key-input::placeholder{color:var(--faint);}
 #ai-key-save{
   background:linear-gradient(135deg,var(--accent),var(--accent2));
-  color:#1a0000;border:none;border-radius:4px;padding:5px 12px;
-  font-family:var(--title);font-weight:700;font-size:9px;letter-spacing:0.15em;
-  cursor:pointer;transition:opacity 0.2s;white-space:nowrap;
+  color:#0a0000;border:none;border-radius:6px;padding:5px 14px;
+  font-family:var(--title);font-weight:700;font-size:8px;letter-spacing:0.2em;
+  cursor:pointer;transition:all 0.2s;white-space:nowrap;
+  box-shadow:0 0 14px rgba(255,43,43,0.25);
 }
-#ai-key-save:hover{opacity:0.85;}
+#ai-key-save:hover{box-shadow:0 0 22px rgba(255,43,43,0.45);transform:translateY(-1px);}
 #ai-key-status{font-size:9px;font-family:var(--font);color:var(--faint);letter-spacing:0.1em;}
 
-/* Messages */
+/* ── Messages ── */
 #ai-messages{
-  flex:1;overflow-y:auto;padding:16px 14px;
-  display:flex;flex-direction:column;gap:14px;
-  scroll-behavior:smooth;
+  flex:1;overflow-y:auto;padding:18px 16px;
+  display:flex;flex-direction:column;gap:16px;
+  scroll-behavior:smooth;position:relative;z-index:1;
 }
 #ai-messages::-webkit-scrollbar{width:3px;}
 #ai-messages::-webkit-scrollbar-track{background:transparent;}
 #ai-messages::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
 
-.ai-msg{display:flex;gap:8px;max-width:100%;animation:fadeup 0.25s ease;}
+.ai-msg{display:flex;gap:10px;max-width:100%;animation:fadeup 0.28s ease;}
 .ai-msg.user{flex-direction:row-reverse;}
 
+/* Avatars */
 .ai-avatar{
-  width:28px;height:28px;border-radius:6px;
-  display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;
+  width:30px;height:30px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;flex-shrink:0;
 }
-.ai-msg.user .ai-avatar{background:linear-gradient(135deg,#1a0000,var(--deep));}
+.ai-msg.user .ai-avatar{
+  background:linear-gradient(135deg,var(--deep),rgba(255,43,43,0.15));
+  border:1px solid rgba(255,43,43,0.2);
+  font-size:12px;
+}
 .ai-msg.bot .ai-avatar{
-  background:linear-gradient(135deg,var(--deep),rgba(255,43,43,0.6));
-  box-shadow:0 0 10px rgba(255,43,43,0.2);
+  background:linear-gradient(135deg,#180202,#2d0505);
+  border:1px solid rgba(255,43,43,0.35);
+  box-shadow:0 0 14px rgba(255,43,43,0.15);
+  position:relative;overflow:visible;
+}
+/* Anneau orbital sur l'avatar bot */
+.ai-msg.bot .ai-avatar::after{
+  content:'';position:absolute;inset:-4px;border-radius:12px;
+  border:1px solid transparent;
+  border-top-color:rgba(255,43,43,0.5);
+  border-right-color:rgba(255,106,61,0.3);
+  animation:gemini-orbit 3.5s linear infinite;
+  pointer-events:none;
 }
 
+/* Bulles */
 .ai-bubble{
-  max-width:calc(100% - 42px);padding:10px 12px;border-radius:10px;
-  font-size:12px;line-height:1.65;word-break:break-word;
+  max-width:calc(100% - 44px);padding:11px 14px;
+  border-radius:14px;
+  font-size:12.5px;line-height:1.7;word-break:break-word;
   font-family:var(--body);
 }
 .ai-msg.user .ai-bubble{
-  background:rgba(255,43,43,0.08);border:1px solid rgba(255,43,43,0.2);
-  border-top-right-radius:2px;color:var(--w);
+  background:rgba(255,43,43,0.07);
+  border:1px solid rgba(255,43,43,0.18);
+  border-top-right-radius:3px;color:var(--w);
 }
 .ai-msg.bot .ai-bubble{
-  background:rgba(18,3,3,0.8);border:1px solid var(--border);
-  border-top-left-radius:2px;color:#e8d0d0;
+  background:linear-gradient(135deg,rgba(18,2,2,0.88),rgba(10,1,1,0.92));
+  border:1px solid var(--border);
+  border-top-left-radius:3px;color:#e8d0d0;
+  box-shadow:inset 0 1px 0 rgba(255,43,43,0.06);
 }
 
-/* Code in bubbles */
+/* Code */
 .ai-bubble pre{
-  background:#060002;border:1px solid rgba(255,43,43,0.15);border-radius:6px;
-  padding:10px;overflow-x:auto;margin:8px 0;position:relative;
+  background:rgba(3,0,0,0.9);
+  border:1px solid rgba(255,43,43,0.14);
+  border-left:2px solid rgba(255,43,43,0.6);
+  border-radius:8px;
+  padding:12px;overflow-x:auto;margin:10px 0;position:relative;
 }
 .ai-bubble code{
-  font-family:var(--font);font-size:10px;color:var(--accent2);line-height:1.7;
+  font-family:var(--font);font-size:10px;
+  color:var(--accent2);line-height:1.75;
 }
-.ai-bubble p{margin-bottom:6px;}
+.ai-bubble p{margin-bottom:7px;}
 .ai-bubble p:last-child{margin-bottom:0;}
-.ai-bubble strong{color:var(--accent2);}
+.ai-bubble strong{color:var(--accent2);text-shadow:0 0 8px rgba(255,106,61,0.3);}
 
 .ai-copy-btn{
   position:absolute;top:5px;right:5px;
-  background:rgba(255,43,43,0.1);border:1px solid rgba(255,43,43,0.2);
-  border-radius:3px;padding:2px 7px;font-size:9px;color:var(--dim);
-  cursor:pointer;font-family:var(--font);letter-spacing:0.1em;transition:all 0.2s;
+  background:rgba(255,43,43,0.08);border:1px solid rgba(255,43,43,0.18);
+  border-radius:4px;padding:3px 8px;font-size:8px;color:var(--faint);
+  cursor:pointer;font-family:var(--font);letter-spacing:0.12em;transition:all 0.2s;
 }
-.ai-copy-btn:hover{background:rgba(255,43,43,0.2);color:var(--w);}
+.ai-copy-btn:hover{background:rgba(255,43,43,0.2);border-color:var(--accent);color:var(--w);}
 
-/* Typing */
-.ai-typing-dots{display:flex;gap:4px;align-items:center;padding:2px 0;}
+/* Typing dots — style Gemini étoile animée */
+.ai-typing-dots{display:flex;gap:6px;align-items:center;padding:3px 0;}
 .ai-typing-dots span{
-  width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:0.5;
-  animation:bounce 1.2s infinite;
+  width:7px;height:7px;border-radius:50%;opacity:0.7;
+  animation:gemini-bounce 1.4s ease-in-out infinite;
 }
-.ai-typing-dots span:nth-child(2){animation-delay:0.2s;}
-.ai-typing-dots span:nth-child(3){animation-delay:0.4s;}
-@keyframes bounce{0%,80%,100%{transform:translateY(0);}40%{transform:translateY(-5px);opacity:1;}}
+.ai-typing-dots span:nth-child(1){background:var(--accent);animation-delay:0s;}
+.ai-typing-dots span:nth-child(2){background:#ff6a3d;animation-delay:0.2s;}
+.ai-typing-dots span:nth-child(3){background:var(--accent2);animation-delay:0.4s;}
+@keyframes gemini-bounce{
+  0%,80%,100%{transform:translateY(0);opacity:0.6;}
+  40%{transform:translateY(-6px);opacity:1;}
+}
 
-/* Welcome */
+/* ── Écran de bienvenue ── */
 .ai-welcome{
-  text-align:center;padding:20px 10px;
-  display:flex;flex-direction:column;align-items:center;gap:10px;
+  text-align:center;padding:28px 14px;
+  display:flex;flex-direction:column;align-items:center;gap:14px;
 }
-.ai-welcome-icon{font-size:36px;filter:drop-shadow(0 0 14px rgba(255,43,43,0.4));}
-.ai-welcome h3{font-family:var(--title);font-size:13px;letter-spacing:0.2em;color:var(--accent2);}
-.ai-welcome p{font-size:10px;color:var(--dim);letter-spacing:0.1em;line-height:1.6;max-width:260px;}
-.ai-chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:4px;}
-.ai-chip{
-  background:rgba(255,43,43,0.06);border:1px solid var(--border2);
-  border-radius:20px;padding:5px 12px;font-size:9px;color:var(--dim);
-  cursor:pointer;transition:all 0.2s;font-family:var(--font);letter-spacing:0.1em;
-}
-.ai-chip:hover{background:rgba(255,43,43,0.12);border-color:rgba(255,43,43,0.4);color:var(--w);}
 
-/* Input zone */
-#ai-input-zone{
-  padding:10px 14px;border-top:1px solid var(--border);
-  background:rgba(7,1,1,0.95);flex-shrink:0;
-}
-.ai-input-row{display:flex;gap:8px;align-items:flex-end;}
-#ai-textarea{
-  flex:1;background:rgba(18,3,3,0.8);border:1px solid var(--border2);
-  border-radius:8px;padding:9px 12px;color:var(--w);
-  font-family:var(--body);font-size:13px;resize:none;
-  max-height:100px;min-height:38px;outline:none;
-  transition:border-color 0.2s;line-height:1.5;
-}
-#ai-textarea:focus{border-color:rgba(255,43,43,0.45);}
-#ai-textarea::placeholder{color:var(--faint);}
-#ai-send{
-  width:38px;height:38px;border-radius:8px;flex-shrink:0;
-  background:linear-gradient(135deg,rgba(255,43,43,0.9),var(--accent2));
-  border:none;cursor:pointer;font-size:15px;
+/* Grand logo étoile animé dans le welcome */
+.ai-welcome-icon{
+  position:relative;width:72px;height:72px;
   display:flex;align-items:center;justify-content:center;
-  transition:all 0.2s;box-shadow:0 0 14px rgba(255,43,43,0.25);
 }
-#ai-send:hover{box-shadow:0 0 22px rgba(255,43,43,0.45);}
+.ai-welcome-icon svg{
+  width:52px;height:52px;
+  filter:
+    drop-shadow(0 0 10px rgba(255,43,43,0.9))
+    drop-shadow(0 0 24px rgba(255,106,61,0.5))
+    drop-shadow(0 0 40px rgba(255,43,43,0.2));
+  animation:gemini-logo-breathe 3s ease-in-out infinite;
+}
+/* Anneaux orbitaux concentriques */
+.ai-welcome-icon::before{
+  content:'';position:absolute;width:86px;height:86px;border-radius:50%;
+  border:1px solid rgba(255,43,43,0.2);
+  animation:gemini-orbit 3.5s linear infinite;
+}
+.ai-welcome-icon::after{
+  content:'';position:absolute;width:100px;height:100px;border-radius:50%;
+  border:1px solid rgba(255,106,61,0.12);
+  animation:gemini-orbit 5.5s linear infinite reverse;
+}
+
+.ai-welcome h3{
+  font-family:var(--title);font-size:14px;letter-spacing:0.32em;font-weight:900;
+  background:linear-gradient(90deg,var(--accent) 0%,#ff6a3d 35%,var(--accent2) 60%,var(--accent) 100%);
+  background-size:250% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:gemini-name-shimmer 4s linear infinite;
+}
+.ai-welcome p{
+  font-size:11px;color:var(--dim);
+  letter-spacing:0.08em;line-height:1.65;max-width:280px;
+  font-family:var(--body);
+}
+
+/* Badge identité Gemini */
+.ai-gemini-badge{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:var(--font);font-size:8px;letter-spacing:0.22em;
+  color:var(--dim);
+  border:1px solid var(--border2);
+  border-radius:20px;padding:5px 14px;
+  background:rgba(255,43,43,0.04);
+  box-shadow:0 0 0 1px rgba(255,43,43,0.06);
+}
+/* Étoile Gemini animée dans le badge */
+.ai-gemini-badge::before{
+  content:'✦';color:var(--accent);font-size:9px;
+  animation:gemini-star-spin 3s linear infinite;
+  display:inline-block;text-shadow:0 0 8px rgba(255,43,43,0.6);
+}
+
+/* Chips */
+.ai-chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:6px;}
+.ai-chip{
+  background:rgba(255,43,43,0.05);
+  border:1px solid var(--border);
+  border-radius:20px;padding:6px 14px;font-size:9px;
+  color:var(--dim);
+  cursor:pointer;transition:all 0.22s;
+  font-family:var(--font);letter-spacing:0.1em;
+  position:relative;overflow:hidden;
+}
+.ai-chip::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,43,43,0.07),transparent);
+  transform:translateX(-100%);transition:transform 0.4s;
+}
+.ai-chip:hover{
+  background:rgba(255,43,43,0.12);
+  border-color:rgba(255,43,43,0.4);color:var(--w);
+  box-shadow:0 0 14px rgba(255,43,43,0.12);
+}
+.ai-chip:hover::before{transform:translateX(100%);}
+
+/* ── Zone de saisie ── */
+#ai-input-zone{
+  padding:12px 16px 14px;
+  border-top:1px solid var(--border);
+  background:rgba(7,0,0,0.97);
+  flex-shrink:0;position:relative;z-index:1;
+}
+/* Ligne lumineuse au-dessus */
+#ai-input-zone::before{
+  content:'';position:absolute;top:0;left:20%;right:20%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,43,43,0.5),rgba(255,106,61,0.6),rgba(255,43,43,0.5),transparent);
+  pointer-events:none;
+}
+
+.ai-input-row{display:flex;gap:10px;align-items:flex-end;}
+#ai-textarea{
+  flex:1;
+  background:rgba(12,2,2,0.7);
+  border:1px solid var(--border2);
+  border-radius:12px;padding:10px 14px;color:var(--w);
+  font-family:var(--body);font-size:13px;resize:none;
+  max-height:100px;min-height:40px;outline:none;
+  transition:border-color 0.25s,box-shadow 0.25s;line-height:1.5;
+  caret-color:var(--accent);
+}
+#ai-textarea:focus{
+  border-color:rgba(255,43,43,0.5);
+  box-shadow:0 0 0 3px rgba(255,43,43,0.07),0 0 20px rgba(255,43,43,0.06);
+}
+#ai-textarea::placeholder{color:var(--faint);}
+
+/* Bouton envoi — étoile Gemini qui tourne */
+#ai-send{
+  width:40px;height:40px;border-radius:12px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--accent),#d32f2f,var(--accent2));
+  background-size:200% 200%;
+  border:none;cursor:pointer;font-size:14px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.25s;
+  box-shadow:0 0 18px rgba(255,43,43,0.3),0 0 35px rgba(255,43,43,0.1);
+  animation:gemini-send-pulse 3s ease-in-out infinite;
+  color:#fff;
+}
+@keyframes gemini-send-pulse{
+  0%,100%{box-shadow:0 0 16px rgba(255,43,43,0.3),0 0 32px rgba(255,43,43,0.1);}
+  50%{box-shadow:0 0 26px rgba(255,43,43,0.5),0 0 50px rgba(255,43,43,0.18);}
+}
+#ai-send:hover{
+  box-shadow:0 0 28px rgba(255,43,43,0.55),0 0 55px rgba(255,43,43,0.2);
+  transform:scale(1.06);
+}
 #ai-send:active{transform:scale(0.93);}
-#ai-send:disabled{opacity:0.35;cursor:not-allowed;}
+#ai-send:disabled{opacity:0.3;cursor:not-allowed;animation:none;}
+
 #ai-footer-note{
   text-align:center;font-size:8px;color:var(--faint);
-  margin-top:6px;font-family:var(--font);letter-spacing:0.1em;
+  margin-top:8px;font-family:var(--font);letter-spacing:0.14em;
 }
 </style>
 
@@ -6696,55 +7095,241 @@ document.addEventListener('DOMContentLoaded', function() {
 ══════════════════════════════════════ -->
 <div id="ai-overlay" onclick="closeAIPanel()"></div>
 
-<div id="ai-panel">
-  <div id="ai-header">
-    <div id="ai-logo">⚡</div>
-    <div id="ai-header-info">
-      <h2>SENTINEL · AI</h2>
-      <p>Spécialisé Python &amp; HTML · Gemini 2.0 Flash · Gratuit</p>
+<!-- Template caché pour le welcome screen -->
+<template id="ai-welcome-template">
+  <div class="ai-welcome" id="ai-welcome">
+    <div class="ai-welcome-icon">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C12 2 13.6 8.6 18.5 12C13.6 15.4 12 22 12 22C12 22 10.4 15.4 5.5 12C10.4 8.6 12 2 12 2Z" fill="url(#gRed1w)"/>
+        <path d="M2 12C2 12 8.6 13.6 12 18.5C15.4 13.6 22 12 22 12C22 12 15.4 10.4 12 5.5C8.6 10.4 2 12 2 12Z" fill="url(#gRed2w)" opacity="0.8"/>
+        <defs>
+          <linearGradient id="gRed1w" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff2b2b"/><stop offset="100%" stop-color="#ff6a3d"/></linearGradient>
+          <linearGradient id="gRed2w" x1="2" y1="12" x2="22" y2="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff6a3d"/><stop offset="100%" stop-color="#ff2b2b"/></linearGradient>
+        </defs>
+      </svg>
     </div>
-    <div id="ai-status-dot"></div>
-    <button id="ai-close" onclick="closeAIPanel()">✕</button>
+    <h3>SENTINEL AI ACTIF</h3>
+    <p>Assistant IA nouvelle génération · Spécialisé Python, HTML/CSS/JS et développement web.</p>
+    <div class="ai-gemini-badge">Sentinel AI · Développement &amp; OSINT</div>
+    <div class="ai-chips">
+      <div class="ai-chip" onclick="aiQuick('Crée-moi un script Python pour scraper un site web')">Scraper Python</div>
+      <div class="ai-chip" onclick="aiQuick('Explique-moi les bases de Python avec des exemples')">Bases Python</div>
+      <div class="ai-chip" onclick="aiQuick('Comment faire un menu hamburger responsive en HTML/CSS ?')">Menu responsive</div>
+      <div class="ai-chip" onclick="aiQuick('Crée-moi une API REST simple en Python avec Flask')">API Flask</div>
+      <div class="ai-chip" onclick="aiQuick('Comment optimiser mon site HTML pour le SEO ?')">SEO HTML</div>
+      <div class="ai-chip" onclick="aiQuick('Explique-moi les décorateurs Python')">Décorateurs Python</div>
+    </div>
+  </div>
+</template>
+
+<div id="ai-panel">
+  <!-- SIDEBAR CONVERSATIONS -->
+  <div id="ai-conv-sidebar">
+    <div id="ai-conv-sidebar-header">
+      <span>💬 CONVERSATIONS</span>
+      <button id="ai-new-conv-btn" onclick="createConversation()" title="Nouvelle conversation">＋ Nouveau</button>
+    </div>
+    <div id="ai-conv-list"></div>
   </div>
 
-  <div id="ai-key-bar">
-    <span>🔑 CLÉ GEMINI :</span>
-    <input type="password" id="ai-key-input" placeholder="AIza..." />
-    <button id="ai-key-save" onclick="saveAIKey()">ENREGISTRER</button>
-    <span id="ai-key-status">Aucune clé</span>
-  </div>
+  <!-- ZONE PRINCIPALE -->
+  <div id="ai-main">
+    <div id="ai-header">
+      <div id="ai-logo">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C12 2 13.6 8.6 18.5 12C13.6 15.4 12 22 12 22C12 22 10.4 15.4 5.5 12C10.4 8.6 12 2 12 2Z" fill="url(#gRed1)"/>
+          <path d="M2 12C2 12 8.6 13.6 12 18.5C15.4 13.6 22 12 22 12C22 12 15.4 10.4 12 5.5C8.6 10.4 2 12 2 12Z" fill="url(#gRed2)" opacity="0.8"/>
+          <defs>
+            <linearGradient id="gRed1" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff2b2b"/><stop offset="100%" stop-color="#ff6a3d"/></linearGradient>
+            <linearGradient id="gRed2" x1="2" y1="12" x2="22" y2="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff6a3d"/><stop offset="100%" stop-color="#ff2b2b"/></linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div id="ai-header-info">
+        <h2>SENTINEL AI</h2>
+        <p>Python · HTML/CSS/JS · Expert technique</p>
+      </div>
+      <div id="ai-status-dot"></div>
+      <button id="ai-close" onclick="closeAIPanel()">✕</button>
+    </div>
 
-  <div id="ai-messages">
-    <div class="ai-welcome" id="ai-welcome">
-      <div class="ai-welcome-icon">👁️</div>
-      <h3>SENTINEL AI ACTIF</h3>
-      <p>Assistant IA spécialisé en Python, HTML/CSS/JS. Pose n'importe quelle question technique.</p>
-      <div class="ai-chips">
-        <div class="ai-chip" onclick="aiQuick('Crée-moi un script Python pour scraper un site web')">Scraper Python</div>
-        <div class="ai-chip" onclick="aiQuick('Explique-moi les bases de Python avec des exemples')">Bases Python</div>
-        <div class="ai-chip" onclick="aiQuick('Comment faire un menu hamburger responsive en HTML/CSS ?')">Menu responsive</div>
-        <div class="ai-chip" onclick="aiQuick('Crée-moi une API REST simple en Python avec Flask')">API Flask</div>
-        <div class="ai-chip" onclick="aiQuick('Comment optimiser mon site HTML pour le SEO ?')">SEO HTML</div>
-        <div class="ai-chip" onclick="aiQuick('Explique-moi les décorateurs Python')">Décorateurs Python</div>
+    <div id="ai-key-bar" style="display:none;">
+      <input type="hidden" id="ai-key-input" />
+      <span id="ai-key-status"></span>
+    </div>
+
+    <div id="ai-messages">
+      <div class="ai-welcome" id="ai-welcome">
+        <div class="ai-welcome-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C12 2 13.6 8.6 18.5 12C13.6 15.4 12 22 12 22C12 22 10.4 15.4 5.5 12C10.4 8.6 12 2 12 2Z" fill="url(#gRed1w)"/>
+            <path d="M2 12C2 12 8.6 13.6 12 18.5C15.4 13.6 22 12 22 12C22 12 15.4 10.4 12 5.5C8.6 10.4 2 12 2 12Z" fill="url(#gRed2w)" opacity="0.8"/>
+            <defs>
+              <linearGradient id="gRed1w" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff2b2b"/><stop offset="100%" stop-color="#ff6a3d"/></linearGradient>
+              <linearGradient id="gRed2w" x1="2" y1="12" x2="22" y2="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff6a3d"/><stop offset="100%" stop-color="#ff2b2b"/></linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <h3>SENTINEL AI ACTIF</h3>
+        <p>Assistant IA nouvelle génération · Spécialisé Python, HTML/CSS/JS et développement web.</p>
+        <div class="ai-gemini-badge">Sentinel AI · Développement &amp; OSINT</div>
+        <div class="ai-chips">
+          <div class="ai-chip" onclick="aiQuick('Crée-moi un script Python pour scraper un site web')">Scraper Python</div>
+          <div class="ai-chip" onclick="aiQuick('Explique-moi les bases de Python avec des exemples')">Bases Python</div>
+          <div class="ai-chip" onclick="aiQuick('Comment faire un menu hamburger responsive en HTML/CSS ?')">Menu responsive</div>
+          <div class="ai-chip" onclick="aiQuick('Crée-moi une API REST simple en Python avec Flask')">API Flask</div>
+          <div class="ai-chip" onclick="aiQuick('Comment optimiser mon site HTML pour le SEO ?')">SEO HTML</div>
+          <div class="ai-chip" onclick="aiQuick('Explique-moi les décorateurs Python')">Décorateurs Python</div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div id="ai-input-zone">
-    <div class="ai-input-row">
-      <textarea id="ai-textarea" placeholder="Pose ta question..." rows="1"></textarea>
-      <button id="ai-send" onclick="aiSend()">➤</button>
+    <div id="ai-input-zone">
+      <div class="ai-input-row">
+        <textarea id="ai-textarea" placeholder="Demande à Sentinel..." rows="1"></textarea>
+        <button id="ai-send" onclick="aiSend()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M22 2L11 13" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      <div id="ai-footer-note">ENTRÉE pour envoyer · SHIFT+ENTRÉE pour nouvelle ligne</div>
     </div>
-    <div id="ai-footer-note">ENTRÉE pour envoyer · SHIFT+ENTRÉE pour nouvelle ligne</div>
   </div>
 </div>
 
 <script>
 /* ══ SENTINEL AI ══ */
 (function(){
-  let aiKey = localStorage.getItem('sentinel_gemini_key') || '';
+  // ── PROXY WORKER URL ──────────────────────────────────────
+  // Remplace cette URL par l'URL de ton Cloudflare Worker
+  // après l'avoir déployé (ex: https://sentinel-ai.ton-nom.workers.dev)
+  const WORKER_URL = 'https://sentinel-ia.kevinatortutu3.workers.dev';
+  // ─────────────────────────────────────────────────────────
+
+  let aiKey = 'proxy'; // toujours "connecté" via le Worker
   let aiLoading = false;
   let aiHistory = [];
+
+  // ─── SYSTÈME DE CONVERSATIONS ───
+  let conversations = JSON.parse(localStorage.getItem('sentinel_conversations') || '[]');
+  let currentConvId = null;
+
+  function saveConversations() {
+    localStorage.setItem('sentinel_conversations', JSON.stringify(conversations));
+  }
+
+  function formatDate(isoStr) {
+    const d = new Date(isoStr);
+    const now = new Date();
+    const diffMs = now - d;
+    const diffMin = Math.floor(diffMs / 60000);
+    const diffH = Math.floor(diffMs / 3600000);
+    const diffD = Math.floor(diffMs / 86400000);
+    if (diffMin < 1) return 'À l'instant';
+    if (diffMin < 60) return `il y a ${diffMin} min`;
+    if (diffH < 24) return `il y a ${diffH}h`;
+    if (diffD < 7) return `il y a ${diffD}j`;
+    return d.toLocaleDateString('fr-FR', {day:'2-digit', month:'short', year:'numeric'});
+  }
+
+  function createConversation() {
+    const conv = {
+      id: 'conv_' + Date.now(),
+      title: 'Nouvelle conversation',
+      createdAt: new Date().toISOString(),
+      history: []
+    };
+    conversations.unshift(conv);
+    saveConversations();
+    loadConversation(conv.id);
+    renderConvList();
+  }
+
+  function loadConversation(id) {
+    const conv = conversations.find(c => c.id === id);
+    if (!conv) return;
+    currentConvId = id;
+    aiHistory = [...conv.history];
+    // Clear messages area
+    const msgs = document.getElementById('ai-messages');
+    msgs.innerHTML = '';
+    if (aiHistory.length === 0) {
+      msgs.innerHTML = document.getElementById('ai-welcome-template').innerHTML;
+    } else {
+      aiHistory.forEach(m => {
+        addMsgFromHistory(m.role, m.content);
+      });
+    }
+    renderConvList();
+  }
+
+  function addMsgFromHistory(role, content) {
+    const msgs = document.getElementById('ai-messages');
+    const div = document.createElement('div');
+    div.className = 'ai-msg ' + (role === 'user' ? 'user' : 'bot');
+    const av = document.createElement('div');
+    av.className = 'ai-avatar';
+    if (role === 'user') {
+      av.textContent = '👤';
+    } else {
+      av.innerHTML = `<svg viewBox="0 0 24 24" fill="none" width="15" height="15"><path d="M12 2C12 2 13.6 8.6 18.5 12C13.6 15.4 12 22 12 22C12 22 10.4 15.4 5.5 12C10.4 8.6 12 2 12 2Z" fill="url(#gAv1)"/><path d="M2 12C2 12 8.6 13.6 12 18.5C15.4 13.6 22 12 22 12C22 12 15.4 10.4 12 5.5C8.6 10.4 2 12 2 12Z" fill="url(#gAv2)" opacity="0.8"/><defs><linearGradient id="gAv1" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff2b2b"/><stop offset="100%" stop-color="#ff6a3d"/></linearGradient><linearGradient id="gAv2" x1="2" y1="12" x2="22" y2="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff6a3d"/><stop offset="100%" stop-color="#ff2b2b"/></linearGradient></defs></svg>`;
+    }
+    const bubble = document.createElement('div');
+    bubble.className = 'ai-bubble';
+    if (role !== 'user') {
+      bubble.innerHTML = aiFormat(content);
+    } else {
+      bubble.textContent = content;
+    }
+    div.appendChild(av);
+    div.appendChild(bubble);
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function deleteConversation(id, e) {
+    e.stopPropagation();
+    conversations = conversations.filter(c => c.id !== id);
+    saveConversations();
+    if (currentConvId === id) {
+      currentConvId = null;
+      aiHistory = [];
+      const msgs = document.getElementById('ai-messages');
+      msgs.innerHTML = document.getElementById('ai-welcome-template').innerHTML;
+    }
+    renderConvList();
+  }
+
+  function renderConvList() {
+    const list = document.getElementById('ai-conv-list');
+    if (!list) return;
+    list.innerHTML = '';
+    if (conversations.length === 0) {
+      list.innerHTML = '<div class="ai-conv-empty">Aucune conversation</div>';
+      return;
+    }
+    conversations.forEach(conv => {
+      const item = document.createElement('div');
+      item.className = 'ai-conv-item' + (conv.id === currentConvId ? ' active' : '');
+      const lastMsg = conv.history.length > 0 ? conv.history[conv.history.length - 1].content.slice(0, 40) + '…' : 'Aucun message';
+      item.innerHTML = `
+        <div class="ai-conv-info" onclick="loadConversation('${conv.id}')">
+          <div class="ai-conv-title">${conv.title.length > 30 ? conv.title.slice(0,30)+'…' : conv.title}</div>
+          <div class="ai-conv-date">${formatDate(conv.createdAt)}</div>
+          <div class="ai-conv-preview">${lastMsg}</div>
+        </div>
+        <button class="ai-conv-del" onclick="deleteConversation('${conv.id}', event)" title="Supprimer">✕</button>
+      `;
+      list.appendChild(item);
+    });
+  }
+
+  window.loadConversation = loadConversation;
+  window.deleteConversation = deleteConversation;
+  window.createConversation = createConversation;
+  // ─── FIN SYSTÈME CONVERSATIONS ───
 
   const AI_SYSTEM = `Tu es SENTINEL AI, un assistant IA expert intégré dans le portail SENTINEL. Tu es spécialisé en développement informatique, particulièrement en Python et HTML/CSS/JS.
 
@@ -6767,21 +7352,14 @@ Règles :
 - Si tu donnes du code Python, assure-toi qu'il est compatible Python 3`;
 
   // Init
-  if (aiKey) {
-    document.getElementById('ai-key-status').textContent = '✅ Connecté';
-    document.getElementById('ai-key-input').value = aiKey;
+  // Init conversations
+  renderConvList();
+  // Load most recent conversation if exists
+  if (conversations.length > 0) {
+    loadConversation(conversations[0].id);
   }
 
-  window.saveAIKey = function() {
-    const v = document.getElementById('ai-key-input').value.trim();
-    if (v.startsWith('AIza')) {
-      aiKey = v;
-      localStorage.setItem('sentinel_gemini_key', v);
-      document.getElementById('ai-key-status').textContent = '✅ Connecté';
-    } else {
-      document.getElementById('ai-key-status').textContent = '❌ Invalide (doit commencer par AIza)';
-    }
-  };
+  window.saveAIKey = function() { /* géré par le Worker */ };
 
   window.toggleAIPanel = function() {
     const panel = document.getElementById('ai-panel');
@@ -6827,7 +7405,10 @@ Règles :
     div.className = 'ai-msg ' + role;
     const av = document.createElement('div');
     av.className = 'ai-avatar';
-    av.textContent = role === 'user' ? '👤' : '⚡';
+    av.textContent = role === 'user' ? '👤' : '';
+    if (role === 'bot') {
+      av.innerHTML = `<svg viewBox="0 0 24 24" fill="none" width="15" height="15"><path d="M12 2C12 2 13.6 8.6 18.5 12C13.6 15.4 12 22 12 22C12 22 10.4 15.4 5.5 12C10.4 8.6 12 2 12 2Z" fill="url(#gAv1)"/><path d="M2 12C2 12 8.6 13.6 12 18.5C15.4 13.6 22 12 22 12C22 12 15.4 10.4 12 5.5C8.6 10.4 2 12 2 12Z" fill="url(#gAv2)" opacity="0.8"/><defs><linearGradient id="gAv1" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff2b2b"/><stop offset="100%" stop-color="#ff6a3d"/></linearGradient><linearGradient id="gAv2" x1="2" y1="12" x2="22" y2="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff6a3d"/><stop offset="100%" stop-color="#ff2b2b"/></linearGradient></defs></svg>`;
+    }
     const bubble = document.createElement('div');
     bubble.className = 'ai-bubble';
     if (role === 'bot') {
@@ -6851,6 +7432,24 @@ Règles :
     div.appendChild(bubble);
     msgs.appendChild(div);
     msgs.scrollTop = msgs.scrollHeight;
+    // Save to current conversation
+    if (currentConvId) {
+      const conv = conversations.find(c => c.id === currentConvId);
+      if (conv) {
+        // Title = first user message
+        const msgRole = role === 'bot' ? 'assistant' : 'user';
+        if (conv.history.length === 0 && msgRole === 'user') {
+          conv.title = content.slice(0, 40) + (content.length > 40 ? '…' : '');
+        }
+        // Avoid duplicate if already added
+        const last = conv.history[conv.history.length - 1];
+        if (!last || last.content !== content || last.role !== msgRole) {
+          conv.history.push({ role: msgRole, content });
+          saveConversations();
+          renderConvList();
+        }
+      }
+    }
   }
 
   function aiFormat(text) {
@@ -6877,13 +7476,26 @@ Règles :
 
   window.aiSend = async function() {
     if (aiLoading) return;
-    if (!aiKey) {
-      alert('⚠️ Ajoute ta clé API Google Gemini en haut du chat !\n\nObtiens-la GRATUITEMENT sur : aistudio.google.com/apikey');
+    if (!WORKER_URL || WORKER_URL.includes('TON-WORKER')) {
+      alert('⚠️ Configure l\'URL de ton Cloudflare Worker dans le fichier HTML !');
       return;
     }
     const ta = document.getElementById('ai-textarea');
     const text = ta.value.trim();
     if (!text) return;
+    // Create conversation if none
+    if (!currentConvId) {
+      const conv = {
+        id: 'conv_' + Date.now(),
+        title: text.slice(0,40) + (text.length > 40 ? '…' : ''),
+        createdAt: new Date().toISOString(),
+        history: []
+      };
+      conversations.unshift(conv);
+      saveConversations();
+      currentConvId = conv.id;
+      renderConvList();
+    }
     ta.value = ''; ta.style.height = 'auto';
     aiLoading = true;
     document.getElementById('ai-send').disabled = true;
@@ -6896,9 +7508,7 @@ Règles :
         role: m.role === 'assistant' ? 'model' : 'user',
         parts: [{ text: m.content }]
       }));
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${aiKey}`,
-        {
+      const res = await fetch(WORKER_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -6909,8 +7519,7 @@ Règles :
             ],
             generationConfig: { maxOutputTokens: 8192, temperature: 0.7 }
           })
-        }
-      );
+        });
       const data = await res.json();
       document.getElementById('ai-typing')?.remove();
       if (data.error) {
