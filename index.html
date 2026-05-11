@@ -2371,6 +2371,7 @@ body.is-developer .admin-dev-header{display:flex;}
         <span id="tb-dev-badge">⬡ DÉVELOPPEUR</span>
         <span id="tb-time" style="color:#333;">--:--</span>
         <button id="notif-bell" onclick="toggleNotif()" title="Notifications">🔔<span id="notif-badge"></span></button>
+        <button id="tb-ai-btn" onclick="toggleAIPanel()" title="Assistant IA">⚡ IA</button>
         <button id="tb-logout" onclick="doLogout()">DÉCONNEXION</button>
       </div>
     </div>
@@ -4844,8 +4845,7 @@ async function postComment(){
     is_admin:       currentUser.isAdmin||false,
     email_verified: currentUser.emailVerified||false,
     content:        content,
-    likes:          0,
-    created_at:     new Date().toISOString()
+    likes:          0
   };
 
   const res = await sbFetch('POST','comments', payload);
@@ -5850,6 +5850,224 @@ async function updateOnlineCount(){
   box-shadow:0 0 0 3px rgba(255,43,43,0.08);
 }
 #cmt-box .cmt-input::placeholder{color:rgba(92,36,36,0.6);font-style:italic;}
+
+/* ═══════════════════════════════════════
+   SENTINEL AI — CHATBOT PANEL
+════════════════════════════════════════ */
+#tb-ai-btn{
+  background:linear-gradient(135deg,rgba(255,43,43,0.18),rgba(255,106,61,0.12));
+  border:1px solid rgba(255,43,43,0.45);
+  color:var(--accent2);font-family:var(--font);font-size:9px;
+  padding:5px 14px;cursor:pointer;letter-spacing:0.2em;
+  transition:all 0.2s;border-radius:4px;
+  text-shadow:0 0 10px rgba(255,106,61,0.5);
+  box-shadow:0 0 12px rgba(255,43,43,0.12);
+}
+#tb-ai-btn:hover{border-color:var(--accent);color:#fff;box-shadow:0 0 20px rgba(255,43,43,0.3);}
+#tb-ai-btn.active{background:linear-gradient(135deg,rgba(255,43,43,0.3),rgba(255,106,61,0.2));border-color:var(--accent);}
+
+/* Overlay */
+#ai-overlay{
+  display:none;position:fixed;inset:0;z-index:9000;
+  background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);
+  animation:fadein 0.2s ease;
+}
+#ai-overlay.open{display:block;}
+
+/* Panel */
+#ai-panel{
+  position:fixed;bottom:0;right:0;
+  width:min(430px,100vw);
+  height:min(680px,92dvh);
+  z-index:9001;
+  background:linear-gradient(180deg,rgba(14,2,2,0.99),rgba(7,1,1,1));
+  border:1px solid var(--border2);
+  border-bottom:none;
+  border-right:none;
+  border-radius:20px 0 0 0;
+  display:flex;flex-direction:column;
+  transform:translateY(100%);
+  transition:transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94);
+  box-shadow:-4px -4px 40px rgba(255,43,43,0.12),0 0 0 1px rgba(255,43,43,0.1);
+  overflow:hidden;
+}
+#ai-panel.open{transform:translateY(0);}
+
+/* Panel top glow line */
+#ai-panel::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent),rgba(255,106,61,0.8),var(--accent),transparent);
+  z-index:2;
+}
+
+/* AI Header */
+#ai-header{
+  display:flex;align-items:center;gap:10px;
+  padding:14px 16px;
+  border-bottom:1px solid var(--border);
+  background:rgba(18,3,3,0.6);
+  flex-shrink:0;position:relative;z-index:1;
+}
+#ai-logo{
+  width:34px;height:34px;border-radius:8px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+  box-shadow:0 0 18px rgba(255,43,43,0.35);
+}
+#ai-header-info h2{
+  font-family:var(--title);font-size:12px;font-weight:900;
+  letter-spacing:0.25em;color:var(--accent2);
+}
+#ai-header-info p{
+  font-family:var(--font);font-size:9px;color:var(--dim);letter-spacing:0.15em;margin-top:2px;
+}
+#ai-status-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--accent);
+  box-shadow:0 0 8px var(--accent);animation:online-pulse 2s infinite;margin-left:auto;
+}
+#ai-close{
+  background:none;border:1px solid var(--border);color:var(--faint);
+  width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:14px;
+  display:flex;align-items:center;justify-content:center;transition:all 0.2s;
+}
+#ai-close:hover{border-color:var(--accent);color:var(--accent);}
+
+/* API Key bar */
+#ai-key-bar{
+  display:flex;align-items:center;gap:8px;padding:8px 14px;
+  background:rgba(255,43,43,0.04);border-bottom:1px solid var(--border);
+  flex-shrink:0;flex-wrap:wrap;
+}
+#ai-key-bar span{font-size:9px;color:var(--accent);font-family:var(--font);letter-spacing:0.15em;white-space:nowrap;}
+#ai-key-input{
+  flex:1;min-width:140px;
+  background:rgba(3,0,5,0.8);border:1px solid var(--border2);border-radius:4px;
+  padding:5px 8px;color:var(--w);font-family:var(--font);font-size:10px;
+  outline:none;transition:border-color 0.2s;letter-spacing:0.05em;
+}
+#ai-key-input:focus{border-color:rgba(255,43,43,0.5);}
+#ai-key-input::placeholder{color:var(--faint);}
+#ai-key-save{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#1a0000;border:none;border-radius:4px;padding:5px 12px;
+  font-family:var(--title);font-weight:700;font-size:9px;letter-spacing:0.15em;
+  cursor:pointer;transition:opacity 0.2s;white-space:nowrap;
+}
+#ai-key-save:hover{opacity:0.85;}
+#ai-key-status{font-size:9px;font-family:var(--font);color:var(--faint);letter-spacing:0.1em;}
+
+/* Messages */
+#ai-messages{
+  flex:1;overflow-y:auto;padding:16px 14px;
+  display:flex;flex-direction:column;gap:14px;
+  scroll-behavior:smooth;
+}
+#ai-messages::-webkit-scrollbar{width:3px;}
+#ai-messages::-webkit-scrollbar-track{background:transparent;}
+#ai-messages::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+
+.ai-msg{display:flex;gap:8px;max-width:100%;animation:fadeup 0.25s ease;}
+.ai-msg.user{flex-direction:row-reverse;}
+
+.ai-avatar{
+  width:28px;height:28px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;
+}
+.ai-msg.user .ai-avatar{background:linear-gradient(135deg,#1a0000,var(--deep));}
+.ai-msg.bot .ai-avatar{
+  background:linear-gradient(135deg,var(--deep),rgba(255,43,43,0.6));
+  box-shadow:0 0 10px rgba(255,43,43,0.2);
+}
+
+.ai-bubble{
+  max-width:calc(100% - 42px);padding:10px 12px;border-radius:10px;
+  font-size:12px;line-height:1.65;word-break:break-word;
+  font-family:var(--body);
+}
+.ai-msg.user .ai-bubble{
+  background:rgba(255,43,43,0.08);border:1px solid rgba(255,43,43,0.2);
+  border-top-right-radius:2px;color:var(--w);
+}
+.ai-msg.bot .ai-bubble{
+  background:rgba(18,3,3,0.8);border:1px solid var(--border);
+  border-top-left-radius:2px;color:#e8d0d0;
+}
+
+/* Code in bubbles */
+.ai-bubble pre{
+  background:#060002;border:1px solid rgba(255,43,43,0.15);border-radius:6px;
+  padding:10px;overflow-x:auto;margin:8px 0;position:relative;
+}
+.ai-bubble code{
+  font-family:var(--font);font-size:10px;color:var(--accent2);line-height:1.7;
+}
+.ai-bubble p{margin-bottom:6px;}
+.ai-bubble p:last-child{margin-bottom:0;}
+.ai-bubble strong{color:var(--accent2);}
+
+.ai-copy-btn{
+  position:absolute;top:5px;right:5px;
+  background:rgba(255,43,43,0.1);border:1px solid rgba(255,43,43,0.2);
+  border-radius:3px;padding:2px 7px;font-size:9px;color:var(--dim);
+  cursor:pointer;font-family:var(--font);letter-spacing:0.1em;transition:all 0.2s;
+}
+.ai-copy-btn:hover{background:rgba(255,43,43,0.2);color:var(--w);}
+
+/* Typing */
+.ai-typing-dots{display:flex;gap:4px;align-items:center;padding:2px 0;}
+.ai-typing-dots span{
+  width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:0.5;
+  animation:bounce 1.2s infinite;
+}
+.ai-typing-dots span:nth-child(2){animation-delay:0.2s;}
+.ai-typing-dots span:nth-child(3){animation-delay:0.4s;}
+@keyframes bounce{0%,80%,100%{transform:translateY(0);}40%{transform:translateY(-5px);opacity:1;}}
+
+/* Welcome */
+.ai-welcome{
+  text-align:center;padding:20px 10px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+.ai-welcome-icon{font-size:36px;filter:drop-shadow(0 0 14px rgba(255,43,43,0.4));}
+.ai-welcome h3{font-family:var(--title);font-size:13px;letter-spacing:0.2em;color:var(--accent2);}
+.ai-welcome p{font-size:10px;color:var(--dim);letter-spacing:0.1em;line-height:1.6;max-width:260px;}
+.ai-chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:4px;}
+.ai-chip{
+  background:rgba(255,43,43,0.06);border:1px solid var(--border2);
+  border-radius:20px;padding:5px 12px;font-size:9px;color:var(--dim);
+  cursor:pointer;transition:all 0.2s;font-family:var(--font);letter-spacing:0.1em;
+}
+.ai-chip:hover{background:rgba(255,43,43,0.12);border-color:rgba(255,43,43,0.4);color:var(--w);}
+
+/* Input zone */
+#ai-input-zone{
+  padding:10px 14px;border-top:1px solid var(--border);
+  background:rgba(7,1,1,0.95);flex-shrink:0;
+}
+.ai-input-row{display:flex;gap:8px;align-items:flex-end;}
+#ai-textarea{
+  flex:1;background:rgba(18,3,3,0.8);border:1px solid var(--border2);
+  border-radius:8px;padding:9px 12px;color:var(--w);
+  font-family:var(--body);font-size:13px;resize:none;
+  max-height:100px;min-height:38px;outline:none;
+  transition:border-color 0.2s;line-height:1.5;
+}
+#ai-textarea:focus{border-color:rgba(255,43,43,0.45);}
+#ai-textarea::placeholder{color:var(--faint);}
+#ai-send{
+  width:38px;height:38px;border-radius:8px;flex-shrink:0;
+  background:linear-gradient(135deg,rgba(255,43,43,0.9),var(--accent2));
+  border:none;cursor:pointer;font-size:15px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;box-shadow:0 0 14px rgba(255,43,43,0.25);
+}
+#ai-send:hover{box-shadow:0 0 22px rgba(255,43,43,0.45);}
+#ai-send:active{transform:scale(0.93);}
+#ai-send:disabled{opacity:0.35;cursor:not-allowed;}
+#ai-footer-note{
+  text-align:center;font-size:8px;color:var(--faint);
+  margin-top:6px;font-family:var(--font);letter-spacing:0.1em;
+}
 </style>
 
 <script>
@@ -6471,6 +6689,247 @@ document.addEventListener('DOMContentLoaded', function() {
     if (btn) btn.setAttribute('onclick', fn);
   });
 });
+</script>
+
+<!-- ══════════════════════════════════════
+     SENTINEL AI — PANNEAU CHATBOT
+══════════════════════════════════════ -->
+<div id="ai-overlay" onclick="closeAIPanel()"></div>
+
+<div id="ai-panel">
+  <div id="ai-header">
+    <div id="ai-logo">⚡</div>
+    <div id="ai-header-info">
+      <h2>SENTINEL · AI</h2>
+      <p>Spécialisé Python &amp; HTML · Gemini 2.0 Flash · Gratuit</p>
+    </div>
+    <div id="ai-status-dot"></div>
+    <button id="ai-close" onclick="closeAIPanel()">✕</button>
+  </div>
+
+  <div id="ai-key-bar">
+    <span>🔑 CLÉ GEMINI :</span>
+    <input type="password" id="ai-key-input" placeholder="AIza..." />
+    <button id="ai-key-save" onclick="saveAIKey()">ENREGISTRER</button>
+    <span id="ai-key-status">Aucune clé</span>
+  </div>
+
+  <div id="ai-messages">
+    <div class="ai-welcome" id="ai-welcome">
+      <div class="ai-welcome-icon">👁️</div>
+      <h3>SENTINEL AI ACTIF</h3>
+      <p>Assistant IA spécialisé en Python, HTML/CSS/JS. Pose n'importe quelle question technique.</p>
+      <div class="ai-chips">
+        <div class="ai-chip" onclick="aiQuick('Crée-moi un script Python pour scraper un site web')">Scraper Python</div>
+        <div class="ai-chip" onclick="aiQuick('Explique-moi les bases de Python avec des exemples')">Bases Python</div>
+        <div class="ai-chip" onclick="aiQuick('Comment faire un menu hamburger responsive en HTML/CSS ?')">Menu responsive</div>
+        <div class="ai-chip" onclick="aiQuick('Crée-moi une API REST simple en Python avec Flask')">API Flask</div>
+        <div class="ai-chip" onclick="aiQuick('Comment optimiser mon site HTML pour le SEO ?')">SEO HTML</div>
+        <div class="ai-chip" onclick="aiQuick('Explique-moi les décorateurs Python')">Décorateurs Python</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="ai-input-zone">
+    <div class="ai-input-row">
+      <textarea id="ai-textarea" placeholder="Pose ta question..." rows="1"></textarea>
+      <button id="ai-send" onclick="aiSend()">➤</button>
+    </div>
+    <div id="ai-footer-note">ENTRÉE pour envoyer · SHIFT+ENTRÉE pour nouvelle ligne</div>
+  </div>
+</div>
+
+<script>
+/* ══ SENTINEL AI ══ */
+(function(){
+  let aiKey = localStorage.getItem('sentinel_gemini_key') || '';
+  let aiLoading = false;
+  let aiHistory = [];
+
+  const AI_SYSTEM = `Tu es SENTINEL AI, un assistant IA expert intégré dans le portail SENTINEL. Tu es spécialisé en développement informatique, particulièrement en Python et HTML/CSS/JS.
+
+Tu maîtrises parfaitement :
+- Python (tous niveaux : bases, POO, scripts, automatisation, scraping, Flask, FastAPI, pandas, numpy, etc.)
+- HTML5, CSS3, JavaScript (vanilla, ES6+, animations, responsive design, APIs web)
+- Sécurité informatique et OSINT dans un cadre éducatif
+- Bases de données (SQL, SQLite, PostgreSQL)
+- Git, GitHub, déploiement web
+- Algorithmes, structures de données
+- Debugging et optimisation de code
+
+Règles :
+- Réponds toujours en français sauf si on te parle autrement
+- Fournis du code complet, fonctionnel et bien commenté
+- Utilise des blocs de code avec le bon langage
+- Sois précis, technique et pédagogue
+- Ne censure aucune question technique légitime
+- Explique chaque étape importante
+- Si tu donnes du code Python, assure-toi qu'il est compatible Python 3`;
+
+  // Init
+  if (aiKey) {
+    document.getElementById('ai-key-status').textContent = '✅ Connecté';
+    document.getElementById('ai-key-input').value = aiKey;
+  }
+
+  window.saveAIKey = function() {
+    const v = document.getElementById('ai-key-input').value.trim();
+    if (v.startsWith('AIza')) {
+      aiKey = v;
+      localStorage.setItem('sentinel_gemini_key', v);
+      document.getElementById('ai-key-status').textContent = '✅ Connecté';
+    } else {
+      document.getElementById('ai-key-status').textContent = '❌ Invalide (doit commencer par AIza)';
+    }
+  };
+
+  window.toggleAIPanel = function() {
+    const panel = document.getElementById('ai-panel');
+    const overlay = document.getElementById('ai-overlay');
+    const btn = document.getElementById('tb-ai-btn');
+    if (panel.classList.contains('open')) {
+      closeAIPanel();
+    } else {
+      panel.classList.add('open');
+      overlay.classList.add('open');
+      btn && btn.classList.add('active');
+      document.getElementById('ai-textarea').focus();
+    }
+  };
+
+  window.closeAIPanel = function() {
+    document.getElementById('ai-panel').classList.remove('open');
+    document.getElementById('ai-overlay').classList.remove('open');
+    const btn = document.getElementById('tb-ai-btn');
+    btn && btn.classList.remove('active');
+  };
+
+  // Auto-resize textarea
+  const ta = document.getElementById('ai-textarea');
+  ta.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+  });
+  ta.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); aiSend(); }
+  });
+
+  window.aiQuick = function(text) {
+    document.getElementById('ai-textarea').value = text;
+    aiSend();
+  };
+
+  function aiAddMsg(role, content) {
+    const welcome = document.getElementById('ai-welcome');
+    if (welcome) welcome.remove();
+    const msgs = document.getElementById('ai-messages');
+    const div = document.createElement('div');
+    div.className = 'ai-msg ' + role;
+    const av = document.createElement('div');
+    av.className = 'ai-avatar';
+    av.textContent = role === 'user' ? '👤' : '⚡';
+    const bubble = document.createElement('div');
+    bubble.className = 'ai-bubble';
+    if (role === 'bot') {
+      bubble.innerHTML = aiFormat(content);
+      bubble.querySelectorAll('pre').forEach(pre => {
+        pre.style.position = 'relative';
+        const btn = document.createElement('button');
+        btn.className = 'ai-copy-btn';
+        btn.textContent = 'COPIER';
+        btn.onclick = () => {
+          navigator.clipboard.writeText(pre.querySelector('code')?.textContent || pre.textContent);
+          btn.textContent = '✅';
+          setTimeout(() => btn.textContent = 'COPIER', 1500);
+        };
+        pre.appendChild(btn);
+      });
+    } else {
+      bubble.textContent = content;
+    }
+    div.appendChild(av);
+    div.appendChild(bubble);
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function aiFormat(text) {
+    text = text.replace(/```(\w+)?\n?([\s\S]*?)```/g, (_, lang, code) =>
+      `<pre><code>${esc(code.trim())}</code></pre>`);
+    text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    text = text.split('\n\n').map(p => p.trim() ? `<p>${p.replace(/\n/g,'<br>')}</p>` : '').join('');
+    return text;
+  }
+
+  function esc(t) {
+    return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function aiShowTyping() {
+    const msgs = document.getElementById('ai-messages');
+    const d = document.createElement('div');
+    d.className = 'ai-msg bot'; d.id = 'ai-typing';
+    d.innerHTML = '<div class="ai-avatar">⚡</div><div class="ai-bubble"><div class="ai-typing-dots"><span></span><span></span><span></span></div></div>';
+    msgs.appendChild(d);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  window.aiSend = async function() {
+    if (aiLoading) return;
+    if (!aiKey) {
+      alert('⚠️ Ajoute ta clé API Google Gemini en haut du chat !\n\nObtiens-la GRATUITEMENT sur : aistudio.google.com/apikey');
+      return;
+    }
+    const ta = document.getElementById('ai-textarea');
+    const text = ta.value.trim();
+    if (!text) return;
+    ta.value = ''; ta.style.height = 'auto';
+    aiLoading = true;
+    document.getElementById('ai-send').disabled = true;
+    aiAddMsg('user', text);
+    aiHistory.push({ role: 'user', content: text });
+    aiShowTyping();
+    try {
+      // Construit l'historique au format Gemini
+      const geminiHistory = aiHistory.slice(0,-1).map(m => ({
+        role: m.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: m.content }]
+      }));
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${aiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            system_instruction: { parts: [{ text: AI_SYSTEM }] },
+            contents: [
+              ...geminiHistory,
+              { role: 'user', parts: [{ text: text }] }
+            ],
+            generationConfig: { maxOutputTokens: 8192, temperature: 0.7 }
+          })
+        }
+      );
+      const data = await res.json();
+      document.getElementById('ai-typing')?.remove();
+      if (data.error) {
+        aiAddMsg('bot', '❌ Erreur : ' + data.error.message);
+        aiHistory.pop();
+      } else {
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || '❌ Réponse vide.';
+        aiAddMsg('bot', reply);
+        aiHistory.push({ role: 'assistant', content: reply });
+      }
+    } catch(err) {
+      document.getElementById('ai-typing')?.remove();
+      aiAddMsg('bot', '❌ Erreur de connexion. Vérifie ta clé API.');
+      aiHistory.pop();
+    }
+    aiLoading = false;
+    document.getElementById('ai-send').disabled = false;
+  };
+})();
 </script>
 
 </body>
