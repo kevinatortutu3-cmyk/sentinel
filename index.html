@@ -6065,24 +6065,25 @@ async function updateOnlineCount(){
 
 /* ── Panel principal ── */
 #ai-panel{
-  position:fixed;bottom:0;right:0;
-  width:min(680px,100vw);
+  position:fixed;bottom:0;left:50%;
+  width:min(860px,100vw);
   height:min(700px,93dvh);
   z-index:9001;
   background:linear-gradient(160deg,rgba(10,1,1,0.99) 0%,rgba(7,0,0,1) 100%);
   border:1px solid var(--border2);
-  border-bottom:none;border-right:none;
-  border-radius:22px 0 0 0;
+  border-bottom:none;
+  border-radius:22px 22px 0 0;
   display:flex;flex-direction:row;
-  transform:translateY(100%);
-  transition:transform 0.4s cubic-bezier(0.22,1,0.36,1);
+  transform:translateX(-50%) translateY(100%);
+  transition:transform 0.35s cubic-bezier(0.22,1,0.36,1);
+  will-change:transform;
   box-shadow:
-    -6px -6px 50px rgba(255,43,43,0.1),
+    0 -6px 50px rgba(255,43,43,0.12),
     0 0 0 1px rgba(255,43,43,0.08),
     inset 0 0 60px rgba(255,43,43,0.02);
   overflow:hidden;
 }
-#ai-panel.open{transform:translateY(0);}
+#ai-panel.open{transform:translateX(-50%) translateY(0);}
 #ai-main{
   flex:1;
   display:flex;
@@ -6093,13 +6094,13 @@ async function updateOnlineCount(){
   z-index:1;
 }
 
-/* Grille de fond — même style que le site */
+/* Grille de fond — désactivée pour perf mobile */
 #ai-panel::after{
   content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
   background-image:
-    linear-gradient(rgba(255,43,43,0.04) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,43,43,0.04) 1px,transparent 1px);
-  background-size:32px 32px;
+    linear-gradient(rgba(255,43,43,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,43,43,0.03) 1px,transparent 1px);
+  background-size:40px 40px;
 }
 
 /* Ligne glow top — style Gemini mais en rouge */
@@ -6149,8 +6150,8 @@ async function updateOnlineCount(){
   animation:gemini-logo-breathe 3s ease-in-out infinite;
 }
 @keyframes gemini-logo-breathe{
-  0%,100%{filter:drop-shadow(0 0 7px rgba(255,43,43,0.9)) drop-shadow(0 0 16px rgba(255,106,61,0.5));transform:scale(1);}
-  50%{filter:drop-shadow(0 0 14px rgba(255,43,43,1)) drop-shadow(0 0 30px rgba(255,106,61,0.8));transform:scale(1.1);}
+  0%,100%{filter:drop-shadow(0 0 6px rgba(255,43,43,0.8));transform:scale(1);}
+  50%{filter:drop-shadow(0 0 12px rgba(255,43,43,1));transform:scale(1.08);}
 }
 /* Anneau orbital rouge */
 #ai-logo::before{
