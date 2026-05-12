@@ -6310,6 +6310,15 @@ async function updateOnlineCount(){
 .ai-bubble p{margin-bottom:7px;}
 .ai-bubble p:last-child{margin-bottom:0;}
 .ai-bubble strong{color:var(--accent2);text-shadow:0 0 8px rgba(255,106,61,0.3);}
+.ai-bubble em{color:#e8c0c0;font-style:italic;}
+.ai-h2{font-family:var(--title);font-size:14px;font-weight:700;letter-spacing:0.18em;color:var(--accent);margin:12px 0 6px;text-transform:uppercase;}
+.ai-h3{font-family:var(--title);font-size:12px;font-weight:600;letter-spacing:0.14em;color:var(--accent2);margin:10px 0 5px;text-transform:uppercase;}
+.ai-h4{font-family:var(--font);font-size:11px;font-weight:600;letter-spacing:0.12em;color:var(--dim);margin:8px 0 4px;text-transform:uppercase;}
+.ai-ul,.ai-ol{margin:6px 0 6px 16px;padding:0;display:flex;flex-direction:column;gap:3px;}
+.ai-ul li{list-style:none;padding-left:12px;position:relative;color:#e8d0d0;font-size:12.5px;}
+.ai-ul li::before{content:'▸';position:absolute;left:0;color:var(--accent);font-size:9px;top:2px;}
+.ai-ol{list-style:decimal;}
+.ai-ol li{color:#e8d0d0;font-size:12.5px;padding-left:4px;}
 
 .ai-copy-btn{
   position:absolute;top:5px;right:5px;
@@ -6318,6 +6327,29 @@ async function updateOnlineCount(){
   cursor:pointer;font-family:var(--font);letter-spacing:0.12em;transition:all 0.2s;
 }
 .ai-copy-btn:hover{background:rgba(255,43,43,0.2);border-color:var(--accent);color:var(--w);}
+
+/* Bouton copier sur chaque message bot */
+.ai-msg-copy-btn{
+  display:flex;align-items:center;gap:5px;
+  margin-top:8px;margin-left:auto;
+  background:transparent;border:1px solid rgba(255,43,43,0.15);
+  border-radius:5px;padding:4px 10px;font-size:9px;color:var(--faint);
+  cursor:pointer;font-family:var(--font);letter-spacing:0.14em;
+  transition:all 0.2s;width:fit-content;
+}
+.ai-msg-copy-btn svg{opacity:0.5;transition:opacity 0.2s;}
+.ai-msg-copy-btn:hover{background:rgba(255,43,43,0.1);border-color:rgba(255,43,43,0.4);color:var(--w);}
+.ai-msg-copy-btn:hover svg{opacity:1;}
+.ai-msg-copy-btn.copied{color:var(--accent2);border-color:rgba(255,106,61,0.4);}
+
+/* Typing indicator amélioré */
+.ai-typing-bubble{display:flex;flex-direction:column;gap:5px;}
+.ai-typing-label{
+  font-family:var(--font);font-size:8.5px;letter-spacing:0.22em;
+  color:var(--faint);
+  animation:typing-label-pulse 1.6s ease-in-out infinite;
+}
+@keyframes typing-label-pulse{0%,100%{opacity:0.4;}50%{opacity:1;}}
 
 /* Typing dots — style Gemini étoile animée */
 .ai-typing-dots{display:flex;gap:6px;align-items:center;padding:3px 0;}
@@ -6475,6 +6507,37 @@ async function updateOnlineCount(){
   text-align:center;font-size:8px;color:var(--faint);
   margin-top:8px;font-family:var(--font);letter-spacing:0.14em;
 }
+#ai-mode-bar{
+  display:flex;gap:6px;margin-top:8px;margin-bottom:2px;
+}
+#ai-expert-btn{
+  display:flex;align-items:center;gap:5px;
+  font-family:var(--font);font-size:8px;letter-spacing:0.18em;
+  padding:5px 10px;border-radius:6px;cursor:pointer;
+  border:1px solid rgba(255,43,43,0.2);
+  background:rgba(255,43,43,0.05);
+  color:var(--faint);transition:all 0.2s;
+}
+#ai-expert-btn:hover{border-color:rgba(255,43,43,0.5);color:var(--dim);}
+#ai-expert-btn.active{
+  border-color:var(--accent2);
+  background:rgba(255,106,61,0.12);
+  color:var(--accent2);
+  box-shadow:0 0 10px rgba(255,106,61,0.15);
+}
+#ai-expert-btn.active svg{stroke:var(--accent2);}
+#ai-token-bar{
+  display:flex;align-items:center;gap:6px;
+  margin-top:6px;padding:5px 10px;
+  background:rgba(255,43,43,0.04);
+  border:1px solid rgba(255,43,43,0.1);
+  border-radius:6px;font-family:var(--font);
+}
+#ai-token-label{font-size:8px;color:var(--faint);letter-spacing:0.18em;flex-shrink:0;}
+#ai-token-count{font-size:9px;color:var(--accent2);font-weight:600;min-width:28px;text-align:right;}
+#ai-token-sep,#ai-token-max{font-size:8px;color:var(--faint);}
+#ai-token-track{flex:1;height:3px;background:rgba(255,43,43,0.12);border-radius:999px;overflow:hidden;margin-left:2px;}
+#ai-token-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:999px;transition:width 0.4s ease,background 0.4s;}
 </style>
 
 <script>
@@ -7175,7 +7238,20 @@ document.addEventListener('DOMContentLoaded', function() {
           </svg>
         </button>
       </div>
+      <div id="ai-mode-bar">
+        <button id="ai-expert-btn" onclick="toggleExpertMode()" title="Force l'IA à répondre uniquement en code">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          EXPERT CODE
+        </button>
+      </div>
       <div id="ai-footer-note">ENTRÉE pour envoyer · SHIFT+ENTRÉE pour nouvelle ligne</div>
+      <div id="ai-token-bar">
+        <span id="ai-token-label">⬡ TOKENS</span>
+        <span id="ai-token-count">0</span>
+        <span id="ai-token-sep">/</span>
+        <span id="ai-token-max">8 192</span>
+        <div id="ai-token-track"><div id="ai-token-fill"></div></div>
+      </div>
     </div>
   </div>
 </div>
@@ -7259,9 +7335,8 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
     renderConvList();
-  }
-
-  function addMsgFromHistory(role, content) {
+    updateTokenBar();
+  }(role, content) {
     const msgs = document.getElementById('ai-messages');
     const div = document.createElement('div');
     div.className = 'ai-msg ' + (role === 'user' ? 'user' : 'bot');
@@ -7292,6 +7367,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (currentConvId === id) {
       currentConvId = null;
       aiHistory = [];
+      updateTokenBar();
       const msgs = document.getElementById('ai-messages');
       msgs.innerHTML = document.getElementById('ai-welcome-template').innerHTML;
     }
@@ -7346,6 +7422,29 @@ Règles :
 - Ne censure aucune question technique légitime
 - Explique chaque étape importante
 - Si tu donnes du code Python, assure-toi qu'il est compatible Python 3`;
+
+  const AI_SYSTEM_EXPERT = `Tu es SENTINEL AI en MODE EXPERT CODE. Tu réponds UNIQUEMENT avec du code, sans aucune explication, sans introduction, sans conclusion.
+Règles absolues :
+- JAMAIS de texte en dehors des blocs de code
+- Toujours utiliser des blocs \`\`\`langage ... \`\`\`
+- Le code doit être complet, fonctionnel et bien commenté en interne
+- Si plusieurs fichiers sont nécessaires, sépare-les avec un commentaire de titre
+- Aucune phrase de politesse, aucun résumé, SEULEMENT le code`;
+
+  let expertMode = false;
+
+  window.toggleExpertMode = function() {
+    expertMode = !expertMode;
+    const btn = document.getElementById('ai-expert-btn');
+    if (btn) btn.classList.toggle('active', expertMode);
+    // Feedback visuel dans le chat
+    const msgs = document.getElementById('ai-messages');
+    const notif = document.createElement('div');
+    notif.style.cssText = 'text-align:center;font-size:9px;letter-spacing:0.18em;padding:6px;color:' + (expertMode ? 'var(--accent2)' : 'var(--faint)') + ';font-family:var(--font);opacity:0.8;';
+    notif.textContent = expertMode ? '⟨/⟩ MODE EXPERT CODE ACTIVÉ' : '⟨/⟩ MODE EXPERT CODE DÉSACTIVÉ';
+    msgs.appendChild(notif);
+    msgs.scrollTop = msgs.scrollHeight;
+  };
 
   window.saveAIKey = function() { /* géré par le Worker */ };
 
@@ -7430,6 +7529,20 @@ Règles :
         };
         pre.appendChild(btn);
       });
+      // Bouton copier sur la réponse entière
+      const copyMsgBtn = document.createElement('button');
+      copyMsgBtn.className = 'ai-msg-copy-btn';
+      copyMsgBtn.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>COPIER`;
+      copyMsgBtn.onclick = () => {
+        navigator.clipboard.writeText(content);
+        copyMsgBtn.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>COPIÉ`;
+        copyMsgBtn.classList.add('copied');
+        setTimeout(() => {
+          copyMsgBtn.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>COPIER`;
+          copyMsgBtn.classList.remove('copied');
+        }, 2000);
+      };
+      bubble.appendChild(copyMsgBtn);
     } else {
       bubble.textContent = content;
     }
@@ -7458,23 +7571,77 @@ Règles :
   }
 
   function aiFormat(text) {
+    // 1. Blocs de code ```
     text = text.replace(/```(\w+)?\n?([\s\S]*?)```/g, (_, lang, code) =>
-      `<pre><code>${esc(code.trim())}</code></pre>`);
+      `<pre><code class="lang-${lang||''}">${esc(code.trim())}</code></pre>`);
+    // 2. Code inline `x`
     text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
-    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    text = text.split('\n\n').map(p => p.trim() ? `<p>${p.replace(/\n/g,'<br>')}</p>` : '').join('');
+    // 3. Titres # ## ###
+    text = text.replace(/^### (.+)$/gm, '<h4 class="ai-h4">$1</h4>');
+    text = text.replace(/^## (.+)$/gm, '<h3 class="ai-h3">$1</h3>');
+    text = text.replace(/^# (.+)$/gm, '<h2 class="ai-h2">$1</h2>');
+    // 4. Gras **x** et italique *x*
+    text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    text = text.replace(/\*([^*\n]+?)\*/g, '<em>$1</em>');
+    // 5. Listes - item ou * item
+    text = text.replace(/((?:^[\-\*] .+\n?)+)/gm, match => {
+      const items = match.trim().split('\n').map(l => `<li>${l.replace(/^[\-\*] /,'')}</li>`).join('');
+      return `<ul class="ai-ul">${items}</ul>`;
+    });
+    // 6. Listes numérotées 1. item
+    text = text.replace(/((?:^\d+\. .+\n?)+)/gm, match => {
+      const items = match.trim().split('\n').map(l => `<li>${l.replace(/^\d+\. /,'')}</li>`).join('');
+      return `<ol class="ai-ol">${items}</ol>`;
+    });
+    // 7. Paragraphes
+    text = text.split('\n\n').map(p => {
+      p = p.trim();
+      if (!p) return '';
+      if (p.startsWith('<h') || p.startsWith('<ul') || p.startsWith('<ol') || p.startsWith('<pre')) return p;
+      return `<p>${p.replace(/\n/g,'<br>')}</p>`;
+    }).join('');
     return text;
+  }n text;
   }
 
   function esc(t) {
     return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
+  // ── COMPTEUR DE TOKENS (approximatif) ──
+  const TOKEN_MAX = 8192;
+  function estimateTokens(text) {
+    // ~1 token ≈ 4 caractères (approximation universelle)
+    return Math.round(text.length / 4);
+  }
+  function updateTokenBar() {
+    const totalChars = aiHistory.reduce((sum, m) => sum + (m.content || '').length, 0);
+    const tokens = estimateTokens(totalChars.toString()) + Math.round(totalChars / 4);
+    const realTokens = Math.round(totalChars / 4);
+    const pct = Math.min(realTokens / TOKEN_MAX * 100, 100);
+    const countEl = document.getElementById('ai-token-count');
+    const fillEl = document.getElementById('ai-token-fill');
+    if (!countEl || !fillEl) return;
+    countEl.textContent = realTokens.toLocaleString('fr-FR');
+    fillEl.style.width = pct + '%';
+    // Couleur selon usage
+    if (pct > 80) {
+      fillEl.style.background = '#ff2b2b';
+      countEl.style.color = '#ff2b2b';
+    } else if (pct > 50) {
+      fillEl.style.background = 'linear-gradient(90deg,#ff6a3d,#ffaa00)';
+      countEl.style.color = '#ffaa00';
+    } else {
+      fillEl.style.background = 'linear-gradient(90deg,var(--accent),var(--accent2))';
+      countEl.style.color = 'var(--accent2)';
+    }
+  }
+
   function aiShowTyping() {
     const msgs = document.getElementById('ai-messages');
     const d = document.createElement('div');
     d.className = 'ai-msg bot'; d.id = 'ai-typing';
-    d.innerHTML = '<div class="ai-avatar">⚡</div><div class="ai-bubble"><div class="ai-typing-dots"><span></span><span></span><span></span></div></div>';
+    d.innerHTML = '<div class="ai-avatar"><svg viewBox="0 0 24 24" fill="none" width="15" height="15"><path d="M12 2C12 2 13.6 8.6 18.5 12C13.6 15.4 12 22 12 22C12 22 10.4 15.4 5.5 12C10.4 8.6 12 2 12 2Z" fill="#ff2b2b"/><path d="M2 12C2 12 8.6 13.6 12 18.5C15.4 13.6 22 12 22 12C22 12 15.4 10.4 12 5.5C8.6 10.4 2 12 2 12Z" fill="#ff6a3d" opacity="0.8"/></svg></div><div class="ai-bubble ai-typing-bubble"><div class="ai-typing-label">SENTINEL réfléchit</div><div class="ai-typing-dots"><span></span><span></span><span></span></div></div>';
     msgs.appendChild(d);
     msgs.scrollTop = msgs.scrollHeight;
   }
@@ -7506,6 +7673,7 @@ Règles :
     document.getElementById('ai-send').disabled = true;
     aiAddMsg('user', text);
     aiHistory.push({ role: 'user', content: text });
+    updateTokenBar();
     aiShowTyping();
     try {
       // Construit l'historique au format Gemini
@@ -7517,7 +7685,7 @@ Règles :
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            system_instruction: { parts: [{ text: AI_SYSTEM }] },
+            system_instruction: { parts: [{ text: expertMode ? AI_SYSTEM_EXPERT : AI_SYSTEM }] },
             contents: [
               ...geminiHistory,
               { role: 'user', parts: [{ text: text }] }
@@ -7534,6 +7702,7 @@ Règles :
         const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || '❌ Réponse vide.';
         aiAddMsg('bot', reply);
         aiHistory.push({ role: 'assistant', content: reply });
+        updateTokenBar();
       }
     } catch(err) {
       document.getElementById('ai-typing')?.remove();
