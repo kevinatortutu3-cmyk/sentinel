@@ -6144,14 +6144,16 @@ async function updateOnlineCount(){
     inset 0 1px 0 rgba(255,255,255,0.06);
   position:relative;
 }
-#ai-logo svg{
-  width:22px;height:22px;
-  filter:drop-shadow(0 0 7px rgba(255,43,43,0.9)) drop-shadow(0 0 16px rgba(255,106,61,0.5));
-  animation:gemini-logo-breathe 3s ease-in-out infinite;
+#ai-header-eye{
+  width:28px;height:17px;
+  filter:drop-shadow(0 0 5px rgba(255,43,43,1)) drop-shadow(0 0 14px rgba(255,106,61,0.6));
+  animation:eye-hdr-pulse 3s ease-in-out infinite;
 }
-@keyframes gemini-logo-breathe{
-  0%,100%{filter:drop-shadow(0 0 6px rgba(255,43,43,0.8));transform:scale(1);}
-  50%{filter:drop-shadow(0 0 12px rgba(255,43,43,1));transform:scale(1.08);}
+@keyframes eye-hdr-pulse{
+  0%,100%{filter:drop-shadow(0 0 5px rgba(255,43,43,1)) drop-shadow(0 0 14px rgba(255,106,61,0.6));transform:scaleY(1);}
+  44%{filter:drop-shadow(0 0 3px rgba(255,43,43,0.4));transform:scaleY(0.08);}
+  50%{filter:drop-shadow(0 0 3px rgba(255,43,43,0.4));transform:scaleY(0.08);}
+  56%{filter:drop-shadow(0 0 8px rgba(255,43,43,1)) drop-shadow(0 0 18px rgba(255,106,61,0.8));transform:scaleY(1);}
 }
 /* Anneau orbital rouge */
 #ai-logo::before{
@@ -6160,10 +6162,9 @@ async function updateOnlineCount(){
   border:1px solid transparent;
   border-top-color:rgba(255,43,43,0.7);
   border-right-color:rgba(255,106,61,0.4);
-  animation:gemini-orbit 2.8s linear infinite;
+  animation:eye-ring 2.8s linear infinite;
   pointer-events:none;
 }
-@keyframes gemini-orbit{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 
 /* Nom + sous-titre dans le header */
 #ai-header-info{flex:1;}
@@ -7228,13 +7229,22 @@ document.addEventListener('DOMContentLoaded', function() {
   <div id="ai-main">
     <div id="ai-header">
       <div id="ai-logo">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2C12 2 13.6 8.6 18.5 12C13.6 15.4 12 22 12 22C12 22 10.4 15.4 5.5 12C10.4 8.6 12 2 12 2Z" fill="url(#gRed1)"/>
-          <path d="M2 12C2 12 8.6 13.6 12 18.5C15.4 13.6 22 12 22 12C22 12 15.4 10.4 12 5.5C8.6 10.4 2 12 2 12Z" fill="url(#gRed2)" opacity="0.8"/>
+        <svg id="ai-header-eye" viewBox="0 0 36 21" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <linearGradient id="gRed1" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff2b2b"/><stop offset="100%" stop-color="#ff6a3d"/></linearGradient>
-            <linearGradient id="gRed2" x1="2" y1="12" x2="22" y2="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff6a3d"/><stop offset="100%" stop-color="#ff2b2b"/></linearGradient>
+            <radialGradient id="eyeHdrG" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ff6a3d"/>
+              <stop offset="100%" stop-color="#ff2b2b"/>
+            </radialGradient>
+            <filter id="eyeHdrGlow">
+              <feGaussianBlur stdDeviation="1.5" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
           </defs>
+          <ellipse cx="18" cy="10.5" rx="17" ry="9.5" fill="none" stroke="#ff2b2b" stroke-width="1.2" filter="url(#eyeHdrGlow)"/>
+          <ellipse cx="18" cy="10.5" rx="17" ry="9.5" fill="none" stroke="rgba(255,106,61,0.3)" stroke-width="0.5"/>
+          <circle cx="18" cy="10.5" r="5.5" fill="url(#eyeHdrG)"/>
+          <circle cx="18" cy="10.5" r="2.1" fill="#040000"/>
+          <circle cx="16.5" cy="9" r="1" fill="rgba(255,255,255,0.28)"/>
         </svg>
       </div>
       <div id="ai-header-info">
