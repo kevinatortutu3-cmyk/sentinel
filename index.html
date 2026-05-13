@@ -6209,6 +6209,16 @@ async function updateOnlineCount(){
   transition:all 0.2s;flex-shrink:0;
 }
 #ai-close:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 12px rgba(255,43,43,0.2);}
+#ai-export-btn{
+  display:flex;align-items:center;gap:4px;
+  background:none;border:1px solid rgba(255,255,255,0.12);
+  color:rgba(255,255,255,0.45);
+  height:30px;padding:0 10px;border-radius:8px;cursor:pointer;
+  font-family:var(--font);font-size:8px;letter-spacing:0.18em;
+  transition:all 0.2s;flex-shrink:0;
+}
+#ai-export-btn:hover{border-color:var(--accent2);color:var(--accent2);box-shadow:0 0 10px rgba(255,106,61,0.15);}
+#ai-export-btn svg{flex-shrink:0;}
 
 /* ── Barre clé API ── */
 #ai-key-bar{
@@ -6508,34 +6518,55 @@ async function updateOnlineCount(){
   margin-top:8px;font-family:var(--font);letter-spacing:0.14em;
 }
 #ai-mode-bar{
-  display:flex;gap:6px;margin-top:8px;margin-bottom:2px;
+  display:flex;align-items:center;gap:8px;margin-top:8px;margin-bottom:2px;flex-wrap:wrap;
+}
+#ai-tone-bar{
+  display:flex;align-items:center;gap:4px;margin-left:auto;
+}
+#ai-tone-label{
+  font-family:var(--font);font-size:7px;letter-spacing:0.2em;
+  color:rgba(255,255,255,0.3);margin-right:2px;
+}
+.ai-tone-btn{
+  font-family:var(--font);font-size:8px;letter-spacing:0.14em;
+  padding:4px 9px;border-radius:6px;cursor:pointer;
+  border:1px solid rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.03);
+  color:rgba(255,255,255,0.35);transition:all 0.2s;
+}
+.ai-tone-btn:hover{border-color:rgba(255,43,43,0.4);color:rgba(255,255,255,0.65);}
+.ai-tone-btn.active{
+  border-color:var(--accent);
+  background:rgba(255,43,43,0.1);
+  color:rgba(255,255,255,0.85);
 }
 #ai-expert-btn{
   display:flex;align-items:center;gap:5px;
   font-family:var(--font);font-size:8px;letter-spacing:0.18em;
   padding:5px 10px;border-radius:6px;cursor:pointer;
-  border:1px solid rgba(255,43,43,0.2);
-  background:rgba(255,43,43,0.05);
-  color:var(--faint);transition:all 0.2s;
+  border:1px solid rgba(255,43,43,0.35);
+  background:rgba(255,43,43,0.08);
+  color:rgba(255,255,255,0.55);transition:all 0.2s;
 }
-#ai-expert-btn:hover{border-color:rgba(255,43,43,0.5);color:var(--dim);}
+#ai-expert-btn svg{stroke:rgba(255,255,255,0.45);}
+#ai-expert-btn:hover{border-color:rgba(255,43,43,0.6);color:rgba(255,255,255,0.8);background:rgba(255,43,43,0.13);}
 #ai-expert-btn.active{
   border-color:var(--accent2);
-  background:rgba(255,106,61,0.12);
+  background:rgba(255,106,61,0.15);
   color:var(--accent2);
-  box-shadow:0 0 10px rgba(255,106,61,0.15);
+  box-shadow:0 0 12px rgba(255,106,61,0.2);
 }
 #ai-expert-btn.active svg{stroke:var(--accent2);}
 #ai-token-bar{
   display:flex;align-items:center;gap:6px;
   margin-top:6px;padding:5px 10px;
-  background:rgba(255,43,43,0.04);
-  border:1px solid rgba(255,43,43,0.1);
+  background:rgba(255,43,43,0.06);
+  border:1px solid rgba(255,43,43,0.18);
   border-radius:6px;font-family:var(--font);
 }
-#ai-token-label{font-size:8px;color:var(--faint);letter-spacing:0.18em;flex-shrink:0;}
-#ai-token-count{font-size:9px;color:var(--accent2);font-weight:600;min-width:28px;text-align:right;}
-#ai-token-sep,#ai-token-max{font-size:8px;color:var(--faint);}
+#ai-token-label{font-size:8px;color:rgba(255,255,255,0.45);letter-spacing:0.18em;flex-shrink:0;}
+#ai-token-count{font-size:9px;color:var(--accent2);font-weight:700;min-width:28px;text-align:right;}
+#ai-token-sep,#ai-token-max{font-size:8px;color:rgba(255,255,255,0.4);}
 #ai-token-track{flex:1;height:3px;background:rgba(255,43,43,0.12);border-radius:999px;overflow:hidden;margin-left:2px;}
 #ai-token-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:999px;transition:width 0.4s ease,background 0.4s;}
 </style>
@@ -7194,6 +7225,10 @@ document.addEventListener('DOMContentLoaded', function() {
         <p>Python · HTML/CSS/JS · Expert technique</p>
       </div>
       <div id="ai-status-dot"></div>
+      <button id="ai-export-btn" onclick="exportHistory()" title="Exporter la conversation en .txt">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        .TXT
+      </button>
       <button id="ai-close" onclick="closeAIPanel()">✕</button>
     </div>
 
@@ -7243,6 +7278,12 @@ document.addEventListener('DOMContentLoaded', function() {
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
           EXPERT CODE
         </button>
+        <div id="ai-tone-bar">
+          <span id="ai-tone-label">TON</span>
+          <button class="ai-tone-btn active" data-tone="classic" onclick="setTone('classic')">Classic</button>
+          <button class="ai-tone-btn" data-tone="modere" onclick="setTone('modere')">Modéré</button>
+          <button class="ai-tone-btn" data-tone="developpeur" onclick="setTone('developpeur')">Développeur</button>
+        </div>
       </div>
       <div id="ai-footer-note">ENTRÉE pour envoyer · SHIFT+ENTRÉE pour nouvelle ligne</div>
       <div id="ai-token-bar">
@@ -7434,6 +7475,33 @@ Règles absolues :
 - Aucune phrase de politesse, aucun résumé, SEULEMENT le code`;
 
   let expertMode = false;
+  let currentTone = 'classic';
+
+  const AI_TONES = {
+    classic: `Tu es SENTINEL AI, un assistant IA expert intégré dans le portail SENTINEL. Tu es spécialisé en développement informatique, particulièrement en Python et HTML/CSS/JS.
+Tu maîtrises parfaitement : Python, HTML5/CSS3/JavaScript, sécurité informatique, bases de données, Git, algorithmes et debugging.
+Règles : Réponds en français, fournis du code complet et commenté, sois précis et pédagogue. Explique chaque étape importante.`,
+
+    modere: `Tu es SENTINEL AI, un assistant IA sympa et accessible intégré dans le portail SENTINEL.
+Tu es fort en développement (Python, HTML/CSS/JS) mais tu t'adaptes à ton interlocuteur : tu restes simple, clair, sans jargon inutile. Tu expliques les choses comme à un ami curieux.
+Règles : Réponds en français de façon détendue mais précise. Utilise des exemples concrets. Évite le jargon sauf si nécessaire, et dans ce cas explique-le. Le code doit rester fonctionnel et lisible.`,
+
+    developpeur: `Tu es SENTINEL AI en mode DÉVELOPPEUR — communication directe, technique, sans fioritures.
+Tu t'adresses à un développeur expérimenté. Pas d'introduction inutile, pas de pédagogie de base : va droit au but. Fournis du code propre, optimisé, avec des patterns modernes. Mentionne les edge cases, les performances, les alternatives.
+Règles : Français technique. Blocs de code systématiques. Commentaires uniquement sur les parties non triviales. Références aux docs officielles si pertinent.`,
+  };
+
+  window.setTone = function(tone) {
+    currentTone = tone;
+    document.querySelectorAll('.ai-tone-btn').forEach(b => b.classList.toggle('active', b.dataset.tone === tone));
+    const labels = { classic: 'Classic', modere: 'Modéré', developpeur: 'Développeur' };
+    const msgs = document.getElementById('ai-messages');
+    const notif = document.createElement('div');
+    notif.style.cssText = 'text-align:center;font-size:9px;letter-spacing:0.16em;padding:5px;color:rgba(255,255,255,0.35);font-family:var(--font);';
+    notif.textContent = `◈ TON : ${labels[tone].toUpperCase()}`;
+    msgs.appendChild(notif);
+    msgs.scrollTop = msgs.scrollHeight;
+  };
 
   window.toggleExpertMode = function() {
     expertMode = !expertMode;
@@ -7449,6 +7517,35 @@ Règles absolues :
   };
 
   window.saveAIKey = function() { /* géré par le Worker */ };
+
+  window.exportHistory = function() {
+    if (!aiHistory || aiHistory.length === 0) {
+      alert('Aucun message à exporter.');
+      return;
+    }
+    const date = new Date().toLocaleDateString('fr-FR').replace(/\//g, '-');
+    const time = new Date().toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'}).replace(':','-');
+    let txt = '═══════════════════════════════════════\n';
+    txt += '  SENTINEL AI — Export de conversation\n';
+    txt += `  Date : ${new Date().toLocaleDateString('fr-FR')} à ${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}\n`;
+    txt += `  Messages : ${aiHistory.length}\n`;
+    txt += '═══════════════════════════════════════\n\n';
+    aiHistory.forEach((m, i) => {
+      const role = m.role === 'user' ? '[ VOUS ]' : '[ SENTINEL AI ]';
+      txt += role + '\n';
+      txt += (m.content || '').trim() + '\n\n';
+      if (i < aiHistory.length - 1) txt += '───────────────────────────────────────\n\n';
+    });
+    txt += '\n═══════════════════════════════════════\n';
+    txt += '  Fin de la conversation — SENTINEL AI\n';
+    txt += '═══════════════════════════════════════\n';
+    const blob = new Blob([txt], {type:'text/plain;charset=utf-8'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `sentinel-ai_${date}_${time}.txt`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  };
 
   window.toggleAIPanel = function() {
     const panel = document.getElementById('ai-panel');
@@ -7686,7 +7783,7 @@ Règles absolues :
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            system_instruction: { parts: [{ text: expertMode ? AI_SYSTEM_EXPERT : AI_SYSTEM }] },
+            system_instruction: { parts: [{ text: expertMode ? AI_SYSTEM_EXPERT : AI_TONES[currentTone] }] },
             contents: [
               ...geminiHistory,
               { role: 'user', parts: [{ text: text }] }
