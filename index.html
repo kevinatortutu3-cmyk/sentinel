@@ -6084,6 +6084,19 @@ async function updateOnlineCount(){
   overflow:hidden;
 }
 #ai-panel.open{transform:translateX(-50%) translateY(0);}
+#ai-panel.dragged{
+  border-radius:22px;
+  border-bottom:1px solid var(--border2);
+  transition:box-shadow 0.2s,border-radius 0.2s;
+}
+#ai-panel.dragging-active{
+  transition:none;
+  box-shadow:
+    0 12px 60px rgba(255,43,43,0.22),
+    0 0 0 1px rgba(255,43,43,0.25),
+    inset 0 0 60px rgba(255,43,43,0.02);
+  cursor:grabbing;
+}
 #ai-main{
   flex:1;
   display:flex;
@@ -6131,7 +6144,17 @@ async function updateOnlineCount(){
   background:linear-gradient(180deg,rgba(20,3,3,0.7),rgba(10,1,1,0.4));
   flex-shrink:0;position:relative;z-index:1;
   backdrop-filter:blur(8px);
+  cursor:grab;
+  user-select:none;
+  -webkit-user-select:none;
 }
+#ai-header:active{cursor:grabbing;}
+#ai-drag-hint{
+  font-size:9px;color:var(--faint);letter-spacing:0.18em;
+  display:flex;align-items:center;gap:5px;margin-right:4px;
+  opacity:0.6;flex-shrink:0;pointer-events:none;
+}
+#ai-drag-hint svg{opacity:0.5;}
 
 /* Logo étoile Gemini — rouge & noir */
 #ai-logo{
@@ -7256,6 +7279,13 @@ document.addEventListener('DOMContentLoaded', function() {
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         .TXT
       </button>
+      <div id="ai-drag-hint" title="Glisser pour déplacer">
+        <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="3" cy="2" r="1.1" fill="currentColor"/><circle cx="7" cy="2" r="1.1" fill="currentColor"/>
+          <circle cx="3" cy="7" r="1.1" fill="currentColor"/><circle cx="7" cy="7" r="1.1" fill="currentColor"/>
+          <circle cx="3" cy="12" r="1.1" fill="currentColor"/><circle cx="7" cy="12" r="1.1" fill="currentColor"/>
+        </svg>
+      </div>
       <button id="ai-close" onclick="closeAIPanel()">✕</button>
     </div>
 
@@ -7611,11 +7641,97 @@ Règles : Français technique. Blocs de code systématiques. Commentaires unique
   window.closeAIPanel = function() {
     const panel = document.getElementById('ai-panel');
     const overlay = document.getElementById('ai-overlay');
-    if (panel) panel.classList.remove('open');
+    if (panel) {
+      panel.classList.remove('open','dragged','dragging-active');
+      panel.style.left = '';
+      panel.style.top = '';
+      panel.style.bottom = '';
+      panel.style.transform = '';
+      panel.style.transition = '';
+      _aiDragState.hasDragged = false;
+    }
     if (overlay) overlay.classList.remove('open');
     const btn = document.getElementById('tb-ai-btn');
     btn && btn.classList.remove('active');
   };
+
+  // ── DRAG LOGIC ──────────────────────────────────────────
+  const _aiDragState = { active: false, startX: 0, startY: 0, panelX: 0, panelY: 0, hasDragged: false };
+
+  function _aiDragStart(e) {
+    const panel = document.getElementById('ai-panel');
+    if (!panel || !panel.classList.contains('open')) return;
+    if (e.target.closest('button') || e.target.closest('a')) return;
+    const isTouch = e.type === 'touchstart';
+    const clientX = isTouch ? e.touches[0].clientX : e.clientX;
+    const clientY = isTouch ? e.touches[0].clientY : e.clientY;
+    if (!_aiDragState.hasDragged) {
+      const rect = panel.getBoundingClientRect();
+      panel.style.transition = 'none';
+      panel.style.transform = 'none';
+      panel.style.left = rect.left + 'px';
+      panel.style.top = rect.top + 'px';
+      panel.style.bottom = 'auto';
+      panel.classList.add('dragged');
+      _aiDragState.hasDragged = true;
+    }
+    const rect = panel.getBoundingClientRect();
+    _aiDragState.active = true;
+    _aiDragState.startX = clientX;
+    _aiDragState.startY = clientY;
+    _aiDragState.panelX = rect.left;
+    _aiDragState.panelY = rect.top;
+    panel.classList.add('dragging-active');
+    panel.style.transition = 'none';
+    e.preventDefault();
+  }
+
+  function _aiDragMove(e) {
+    if (!_aiDragState.active) return;
+    const panel = document.getElementById('ai-panel');
+    if (!panel) return;
+    const isTouch = e.type === 'touchmove';
+    const clientX = isTouch ? e.touches[0].clientX : e.clientX;
+    const clientY = isTouch ? e.touches[0].clientY : e.clientY;
+    const dx = clientX - _aiDragState.startX;
+    const dy = clientY - _aiDragState.startY;
+    let newX = _aiDragState.panelX + dx;
+    let newY = _aiDragState.panelY + dy;
+    const margin = 40;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const pw = panel.offsetWidth;
+    newX = Math.max(margin - pw + 80, Math.min(vw - margin - 80, newX));
+    newY = Math.max(margin, Math.min(vh - margin - 50, newY));
+    panel.style.left = newX + 'px';
+    panel.style.top = newY + 'px';
+    e.preventDefault();
+  }
+
+  function _aiDragEnd() {
+    if (!_aiDragState.active) return;
+    _aiDragState.active = false;
+    const panel = document.getElementById('ai-panel');
+    if (panel) {
+      panel.classList.remove('dragging-active');
+      panel.style.transition = 'box-shadow 0.2s, border-radius 0.2s';
+    }
+  }
+
+  setTimeout(function() {
+    const header = document.getElementById('ai-header');
+    if (header && !header._dragBound) {
+      header.addEventListener('mousedown', _aiDragStart);
+      header.addEventListener('touchstart', _aiDragStart, { passive: false });
+      header._dragBound = true;
+    }
+  }, 300);
+
+  document.addEventListener('mousemove', _aiDragMove);
+  document.addEventListener('touchmove', _aiDragMove, { passive: false });
+  document.addEventListener('mouseup', _aiDragEnd);
+  document.addEventListener('touchend', _aiDragEnd);
+  // ── END DRAG LOGIC ───────────────────────────────────────
 
   // Init conversations — dans un try/catch pour éviter qu'un localStorage corrompu plante tout
   try {
